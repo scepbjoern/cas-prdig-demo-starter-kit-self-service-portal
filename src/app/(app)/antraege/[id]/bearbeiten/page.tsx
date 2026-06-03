@@ -42,8 +42,6 @@ export default async function BearbeitenPage({ params }: { params: Promise<{ id:
           defaultValues={{
             titel: antrag.titel,
             beschreibung: antrag.beschreibung ?? '',
-            plzOrt: antrag.plzOrt ?? '',
-            kanton: antrag.kanton ?? '',
           }}
           action={action}
         />

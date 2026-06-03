@@ -10,9 +10,6 @@ import { format } from 'date-fns'
 import { de } from 'date-fns/locale'
 import { ANTRAG_STATUS_LABEL, ANTRAG_STATUS_VARIANT } from '@/lib/antrag-status'
 import { SubmitButton, DecideButton, DeleteButton } from './antrag-actions'
-import { AntragUpload } from '@/components/antraege/antrag-upload'
-import { AntragAnalyseButton } from '@/components/antraege/antrag-analyse-button'
-import { PdfViewer } from '@/components/pdf-viewer'
 import type { Role } from '@/lib/auth-helpers'
 import type { AntragStatus } from '@/generated/prisma/enums'
 
@@ -78,22 +75,6 @@ export default async function AntragDetailPage({ params }: { params: Promise<{ i
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Begleitdokument</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {antrag.dateiPfad ? (
-            <PdfViewer url={antrag.dateiPfad} dateiName={antrag.dateiName ?? undefined} />
-          ) : (
-            <div className="text-muted-foreground text-sm">Kein Dokument hochgeladen.</div>
-          )}
-          {(isAdmin || isOwner) && status === 'ENTWURF' && (
-            <AntragUpload antragId={antrag.id} />
-          )}
-        </CardContent>
-      </Card>
-
       {antrag.notizen && (
         <Card>
           <CardHeader><CardTitle>Kommunikationsverlauf</CardTitle></CardHeader>
@@ -104,37 +85,6 @@ export default async function AntragDetailPage({ params }: { params: Promise<{ i
           </CardContent>
         </Card>
       )}
-
-      {(isAdmin || isReviewer) && antrag.dateiPfad && (() => {
-        const kiAnalyse = antrag.kiAnalyse ? JSON.parse(antrag.kiAnalyse) : null
-        return (
-          <Card>
-            <CardHeader>
-              <CardTitle>KI-Dokumentenanalyse</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {kiAnalyse ? (
-                <div className="space-y-3">
-                  <p className="text-sm">{kiAnalyse.zusammenfassung}</p>
-                  {kiAnalyse.kernpunkte?.length > 0 && (
-                    <ul className="text-sm list-disc pl-4 space-y-1">
-                      {kiAnalyse.kernpunkte.map((p: string, i: number) => (
-                        <li key={i}>{p}</li>
-                      ))}
-                    </ul>
-                  )}
-                  {kiAnalyse.empfehlung && (
-                    <p className="text-sm font-medium">Empfehlung: {kiAnalyse.empfehlung}</p>
-                  )}
-                </div>
-              ) : (
-                <p className="text-sm text-muted-foreground">Noch keine Analyse vorhanden.</p>
-              )}
-              <AntragAnalyseButton antragId={antrag.id} />
-            </CardContent>
-          </Card>
-        )
-      })()}
 
       <div className="flex flex-wrap gap-2">
         {/* Einreichen – Ersteller bei ENTWURF */}

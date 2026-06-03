@@ -8,17 +8,19 @@ test.describe('Rollenbasierte Sichtbarkeit', () => {
     await page.click('button[type="submit"]')
 
     await expect(page.getByRole('navigation').getByRole('link', { name: 'Anträge' })).toBeVisible()
-    await expect(page.getByRole('navigation').getByRole('link', { name: 'Personen' })).toBeVisible()
+    await expect(page.getByRole('navigation').getByRole('link', { name: 'Personen' })).toHaveCount(0)
+    await expect(page.getByRole('navigation').getByRole('link', { name: 'KI-Assistent' })).toHaveCount(0)
   })
 
-  test('Applicant sieht keinen Personen-Verwaltungs-Button für Löschen', async ({ page }) => {
+  test('Applicant sieht nur projektrelevante Navigation', async ({ page }) => {
     await page.goto('/login')
     await page.fill('input[type="email"]', 'applicant@example.com')
     await page.fill('input[type="password"]', 'a')
     await page.click('button[type="submit"]')
     await page.waitForURL('/')
-    await page.goto('/personen')
 
-    await expect(page.locator('button:has-text("Löschen")')).not.toBeVisible()
+    await expect(page.getByRole('navigation').getByRole('link', { name: 'Anträge' })).toBeVisible()
+    await expect(page.getByRole('navigation').getByRole('link', { name: 'Personen' })).toHaveCount(0)
+    await expect(page.getByRole('navigation').getByRole('link', { name: 'KI-Assistent' })).toHaveCount(0)
   })
 })

@@ -27,7 +27,7 @@ model User {
 
   sessions Session[]
   accounts Account[]
-  antraege Antrag[]  // Demo-Relation
+  antraege Antrag[]  // Relation zum Prozessobjekt
 
   @@map("users")
 }
@@ -109,16 +109,3 @@ model Antrag {
   @@map("antraege")
 }
 
-// Demo-Entität 2: Person (generisches Stammdaten-Objekt)
-model Person {
-  id        String   @id @default(cuid())
-  vorname   String
-  nachname  String
-  email     String   @unique
-  telefon   String?
-  adresse   String?
-  erstelltAm DateTime @default(now())
-  aktualisiertAm DateTime @updatedAt
-
-  @@map("personen")
-}

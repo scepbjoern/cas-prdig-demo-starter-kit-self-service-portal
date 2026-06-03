@@ -9,7 +9,6 @@ const prisma = new PrismaClient({ adapter })
 async function main() {
   console.log('Lösche bestehende Daten...')
   await prisma.antrag.deleteMany()
-  await prisma.person.deleteMany()
   await prisma.session.deleteMany()
   await prisma.account.deleteMany()
   await prisma.user.deleteMany()
@@ -40,23 +39,12 @@ async function main() {
   })
 
   const applicant = await prisma.user.findUniqueOrThrow({ where: { email: 'applicant@example.com' } })
-  const admin = await prisma.user.findUniqueOrThrow({ where: { email: 'admin@example.com' } })
-
   console.log('Erstelle Demo-Anträge...')
   await prisma.antrag.createMany({
     data: [
       { titel: 'Urlaubsantrag Juli', beschreibung: 'Urlaub vom 1.–14. Juli', status: 'EINGEREICHT', erstellerId: applicant.id, plzOrt: 'Zürich', kanton: 'ZH' },
       { titel: 'Weiterbildungsantrag', beschreibung: 'CAS Kurs ZHAW', status: 'GENEHMIGT', erstellerId: applicant.id, plzOrt: 'Winterthur', kanton: 'ZH' },
       { titel: 'Materialbestellung', status: 'ENTWURF', erstellerId: applicant.id, plzOrt: null, kanton: null },
-    ]
-  })
-
-  console.log('Erstelle Demo-Personen...')
-  await prisma.person.createMany({
-    data: [
-      { vorname: 'Maria', nachname: 'Muster', email: 'maria.muster@example.com', telefon: '+41 79 123 45 67' },
-      { vorname: 'Hans', nachname: 'Beispiel', email: 'hans.beispiel@example.com' },
-      { vorname: 'Anna', nachname: 'Test', email: 'anna.test@example.com', adresse: 'Musterstrasse 1, 8000 Zürich' },
     ]
   })
 
