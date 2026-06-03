@@ -2,7 +2,7 @@
 
 ## Status
 
-**Feature-Status:** planned  
+**Feature-Status:** in_progress  
 **Erstellt:** 2026-06-03  
 **Plan-Version:** v002  
 **Quelle:** User Request `/plan-feature Datenmodell Weiterbildungsantrag`, `docs/project/prds/self-service-portal-v002.md` und Review-Integration `plan-v001-r01`  
@@ -236,7 +236,7 @@ Wichtig: Tasks top-to-bottom ausfuehren. Jeder Task ist atomic und einzeln valid
 
 ### Task 1: UPDATE `prisma/schema.prisma`
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Das persistente Datenmodell bildet den PRD-konformen Weiterbildungsantrag fachlich korrekt und typisiert ab.  
 **IMPLEMENT:** Erweitere `AntragStatus` auf alle in PRD `v002` dokumentierten Statuswerte und entwickle das Modell `Antrag` von der generischen Demo-Struktur zum Weiterbildungsantrag mit den MVP-Feldern weiter. Lege Prisma-Typen fest: `startdatum DateTime`, `enddatum DateTime?`, `kostenChf Float`. Pruefe alte Demo-Felder kritisch und entferne Felder ohne PRD-Funktion nur dann, wenn alle aktiven Referenzen im weiteren Plan mitgezogen werden.  
 **PATTERN:** Bestehende Better-Auth-Modelle und die Relation `User` -> `Antrag` in `prisma/schema.prisma` beibehalten; nur das Prozessobjekt evolutionaer anpassen.  
@@ -244,14 +244,15 @@ Wichtig: Tasks top-to-bottom ausfuehren. Jeder Task ist atomic und einzeln valid
 **GOTCHA:** Wenn neue Pflichtfelder oder entfernte Felder im Schema eingefuehrt werden, muessen Folgepfade im selben Feature nachgezogen werden; generierte Prisma-Dateien nicht manuell editieren.  
 **ACCEPTANCE CRITERIA:**
 
-- [ ] `AntragStatus` enthaelt mindestens `ENTWURF`, `EINGEREICHT`, `IN_RUECKFRAGE`, `GENEHMIGT`, `ABGELEHNT`, `ZURUECKGEZOGEN`
-- [ ] `Antrag` enthaelt alle in PRD `v002` geforderten MVP-Felder fuer Weiterbildungsantraege mit konkret festgelegten Prisma-Typen
-- [ ] Nicht mehr benoetigte Demo-Felder sind bewusst entfernt oder im Plan nachvollziehbar begruendet beibehalten
+- [x] `AntragStatus` enthaelt mindestens `ENTWURF`, `EINGEREICHT`, `IN_RUECKFRAGE`, `GENEHMIGT`, `ABGELEHNT`, `ZURUECKGEZOGEN`
+- [x] `Antrag` enthaelt alle in PRD `v002` geforderten MVP-Felder fuer Weiterbildungsantraege mit konkret festgelegten Prisma-Typen
+- [x] Nicht mehr benoetigte Demo-Felder sind bewusst entfernt oder im Plan nachvollziehbar begruendet beibehalten
 
 **VALIDATE:**
 
 - Manuelle Pruefung: Schema gegen PRD `v002` querlesen
 - Naechster Pflichtschritt ist `npx prisma generate` in Task 2; `npm run test` ist an diesem Zwischenstand noch nicht die aussagekraeftigste Validierung
+- Ergebnis 2026-06-03: Schema manuell gegen PRD `v002` abgeglichen. `AntragStatus` erweitert, Pflichtfelder `anbieter`, `startdatum`, `kostenChf`, `kostenstelle`, `begruendung` sowie optionale Felder `enddatum`, `bemerkung` hinzugefuegt. Alte Demo-Felder `beschreibung`, `plzOrt`, `kanton`, `dateiPfad`, `dateiName`, `notizen`, `kiAnalyse` bewusst aus dem Prisma-Modell entfernt; aktive Referenzen bleiben fuer Folge-Tasks 3 bis 7 eingeplant.
 
 ### Task 2: UPDATE generierte Prisma-Typen via `npx prisma generate`
 

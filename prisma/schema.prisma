@@ -79,32 +79,30 @@ model Verification {
 // ========== DEMO-ENTITÄTEN (als Muster – durch eigene Entitäten ersetzen/ergänzen) ==========
 
 enum AntragStatus {
-  ENTWURF     // Noch nicht eingereicht
-  EINGEREICHT // Wartet auf Prüfung
-  GENEHMIGT   // Genehmigt
-  ABGELEHNT   // Abgelehnt
+  ENTWURF        // Noch nicht eingereicht
+  EINGEREICHT    // Wartet auf Prüfung
+  IN_RUECKFRAGE  // Rückfrage oder Ergänzung nötig
+  GENEHMIGT      // Genehmigt
+  ABGELEHNT      // Abgelehnt
+  ZURUECKGEZOGEN // Von Antragstellerin zurückgezogen
 }
 
-// Demo-Entität 1: Antrag (generisches Prozessobjekt mit Status-Workflow)
+// Fachmodell: Antrag bildet im MVP einen Weiterbildungsantrag ab.
 model Antrag {
-  id          String       @id @default(cuid())
-  titel       String
-  beschreibung String?
-  status      AntragStatus @default(ENTWURF)
-  erstellerId String
-  ersteller   User         @relation(fields: [erstellerId], references: [id], onDelete: Cascade)
-  erstelltAm  DateTime     @default(now())
+  id             String       @id @default(cuid())
+  titel          String
+  anbieter       String
+  startdatum     DateTime
+  enddatum       DateTime?
+  kostenChf      Float
+  kostenstelle   String
+  begruendung    String
+  bemerkung      String?
+  status         AntragStatus @default(ENTWURF)
+  erstellerId    String
+  ersteller      User         @relation(fields: [erstellerId], references: [id], onDelete: Cascade)
+  erstelltAm     DateTime     @default(now())
   aktualisiertAm DateTime  @updatedAt
-
-  dateiPfad   String?
-  dateiName   String?
-
-  notizen     String?
-
-  kiAnalyse   String?
-
-  plzOrt      String?  // Ortsname (z.B. "Zürich") – aus PLZ-Lookup
-  kanton      String?  // Kantonskürzel (z.B. "ZH") – aus PLZ-Lookup
 
   @@map("antraege")
 }
