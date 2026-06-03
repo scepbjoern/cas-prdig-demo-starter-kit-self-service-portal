@@ -135,15 +135,21 @@ Nach jedem Commit:
 git status
 ```
 
-## Schritt 6: Push Nur Anbieten
+## Schritt 6: Push Zum Remote
 
-Nach erfolgreichem Commit darfst du anbieten:
+Nach erfolgreichem Commit sollst du den aktuellen Branch zum zugehoerigen Remote pushen, sofern ein Upstream-Remote konfiguriert ist:
 
 ```bash
-git push origin <current-branch>
+git push
 ```
 
-Führe den Push nur nach expliziter Bestätigung aus.
+Wenn kein Upstream-Remote konfiguriert ist, ermittle den aktuellen Branch und pushe explizit zu `origin`:
+
+```bash
+git push -u origin <current-branch>
+```
+
+Fuehre keinen Push aus, wenn der Nutzer explizit darum bittet, lokal zu bleiben, oder wenn der Arbeitsstand nach dem Commit nicht sauber ist.
 
 ## Qualitätsregeln
 
@@ -154,3 +160,4 @@ Führe den Push nur nach expliziter Bestätigung aus.
 - Repository soll nach jedem Commit funktionsfähig bleiben.
 - Zwischencommits sind erlaubt und erwünscht, wenn sie klein, validiert und nachvollziehbar sind.
 - Der letzte Feature-Commit soll erst nach `/document` erfolgen, sofern das Feature vollständig abgeschlossen wird.
+- Nach erfolgreichem Commit soll der aktuelle Branch zum Remote gepusht werden, sofern der Nutzer nicht explizit anderes verlangt.
