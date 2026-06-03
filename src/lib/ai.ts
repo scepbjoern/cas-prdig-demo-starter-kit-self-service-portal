@@ -1,0 +1,119 @@
+import OpenAI from 'openai'
+import Together from 'together-ai'
+
+export interface ChatOptions {
+  prompt: string
+  systemPrompt?: string
+  maxTokens?: number
+  temperature?: number
+  fileBase64?: string
+  fileName?: string
+}
+
+function getOpenAIClient(): OpenAI {
+  const key = process.env.OPENAI_API_KEY
+  if (!key) throw new Error('OPENAI_API_KEY fehlt in .env')
+  return new OpenAI({ apiKey: key })
+}
+
+function getTogetherClient(): Together {
+  const key = process.env.TOGETHERAI_API_KEY
+  if (!key) throw new Error('TOGETHERAI_API_KEY fehlt in .env')
+  return new Together({ apiKey: key })
+}
+
+function getOpenRouterClient(): OpenAI {
+  const key = process.env.OPENROUTER_API_KEY
+  if (!key) throw new Error('OPENROUTER_API_KEY fehlt in .env')
+  return new OpenAI({
+    apiKey: key,
+    baseURL: 'https://openrouter.ai/api/v1',
+    defaultHeaders: {
+      'HTTP-Referer': process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000',
+      'X-Title': 'CAS PRDIG Starter Kit',
+    },
+  })
+}
+
+async function chatOpenAI(options: ChatOptions): Promise<string> {
+  const client = getOpenAIClient()
+  const model = process.env.OPENAI_CHAT_MODEL ?? 'gpt-4o-mini'
+
+  const response = await client.chat.completions.create({
+    model,
+    messages: [
+      ...(options.systemPrompt ? [{ role: 'system' as const, content: options.systemPrompt }] : []),
+      { role: 'user', content: options.prompt },
+    ],
+    max_completion_tokens: options.maxTokens ?? 1024,
+    temperature: options.temperature ?? 0.7,
+  })
+
+  return response.choices[0]?.message?.content ?? ''
+}
+
+async function chatTogether(options: ChatOptions): Promise<string> {
+  const client = getTogetherClient()
+  const model = process.env.TOGETHERAI_CHAT_MODEL ?? 'meta-llama/Llama-3.3-70B-Instruct-Turbo'
+
+  const response = await client.chat.completions.create({
+    model,
+    messages: [
+      ...(options.systemPrompt ? [{ role: 'system' as const, content: options.systemPrompt }] : []),
+      { role: 'user', content: options.prompt },
+    ],
+    max_tokens: options.maxTokens ?? 1024,
+    temperature: options.temperature ?? 0.7,
+  })
+
+  return response.choices[0]?.message?.content ?? ''
+}
+
+async function chatOpenRouter(options: ChatOptions): Promise<string> {
+  const client = getOpenRouterClient()
+  const model = process.env.OPENROUTER_CHAT_MODEL ?? 'deepseek/deepseek-v4-flash'
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userContent: any = options.fileBase64
+    ? [
+        { type: 'text', text: options.prompt },
+        {
+          type: 'file',
+          file: {
+            filename: options.fileName ?? 'document.pdf',
+            file_data: `data:application/pdf;base64,${options.fileBase64}`,
+          },
+        },
+      ]
+    : options.prompt
+
+  const response = await client.chat.completions.create({
+    model,
+    messages: [
+      ...(options.systemPrompt ? [{ role: 'system' as const, content: options.systemPrompt }] : []),
+      { role: 'user' as const, content: userContent },
+    ],
+    max_completion_tokens: options.maxTokens ?? 1024,
+    temperature: options.temperature ?? 0.7,
+  })
+
+  return response.choices[0]?.message?.content ?? ''
+}
+
+export async function askLLM(options: ChatOptions): Promise<string> {
+  const provider = process.env.LLM_PROVIDER ?? 'openrouter'
+  if (provider === 'openai') return chatOpenAI(options)
+  if (provider === 'openrouter') return chatOpenRouter(options)
+  return chatTogether(options)
+}
+
+export async function readPdfAsBase64(dateiPfad: string): Promise<{ base64: string; sizeKb: number }> {
+  const { readFile } = await import('fs/promises')
+  const { join } = await import('path')
+  const filePath = join(process.cwd(), 'public', dateiPfad.replace(/^\//, ''))
+  const fileBuffer = await readFile(filePath)
+  return {
+    base64: fileBuffer.toString('base64'),
+    sizeKb: Math.round(fileBuffer.length / 1024),
+  }
+}
