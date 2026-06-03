@@ -14,7 +14,7 @@
 
 | Feature | Status | Datei | Erstellt |
 |---|---|---|---|
-| Datenmodell Weiterbildungsantrag | planned | [plan](docs/project/features/datenmodell-weiterbildungsantrag/plan-v001.md) | 2026-06-03 |
+| Datenmodell Weiterbildungsantrag | planned | [plan](docs/project/features/datenmodell-weiterbildungsantrag/plan-v002.md) | 2026-06-03 |
 
 ## Abgeschlossene Features
 
