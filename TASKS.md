@@ -14,7 +14,7 @@
 
 | Feature | Status | Datei | Erstellt |
 |---|---|---|---|
-| _(Beispiel: Antrag-Formular)_ | planned | [plan](docs/project/features/antrag-formular/plan-v001.md) | 2026-05-30 |
+| Datenmodell Weiterbildungsantrag | planned | [plan](docs/project/features/datenmodell-weiterbildungsantrag/plan-v001.md) | 2026-06-03 |
 
 ## Abgeschlossene Features
 

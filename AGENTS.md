@@ -7,7 +7,7 @@
 
 Dieses Projekt ist das Self-Service-Portal des Prototyp-Gesamtsystems für einen digitalen Antrags- und Genehmigungsprozess. Antragstellende erfassen im Portal Anträge und sehen Statusinformationen ein.
 
-Das Self-Service-Portal ist gemäss `docs/project/architecture/gesamtarchitektur.dsl` eine neu gebaute Komponente. Es erstellt Anträge über die Backend API und ruft dort Statusinformationen ab. Stammdaten und Budgetinformationen werden im Gesamtsystem über einen ERP-API-Mock gelesen; Status- und Entscheidbenachrichtigungen werden über einen E-Mail-Mock abgebildet.
+Das Self-Service-Portal ist gemäss `docs/project/architecture/gesamtarchitektur.dsl` eine neu gebaute Komponente. In der Zielarchitektur kommuniziert es mit einer separaten Backend API. Für dieses Starter-Kit-Repo und das MVP wird diese Trennung jedoch bewusst nicht umgesetzt: Die lokale Next.js-Backend-Logik im Self-Service-Portal übernimmt Formularverarbeitung, Validierung, Statuslogik und Persistenz direkt über Server Actions, optionale Route Handlers und Prisma/SQLite. Stammdaten und Budgetinformationen über einen ERP-API-Mock sowie Status- und Entscheidbenachrichtigungen über einen E-Mail-Mock bleiben Architekturkontext bzw. spätere Ausbaustufen.
 
 Annahme: Dieses Repo bildet nur das Self-Service-Portal ab. Backend API, Fall-Cockpit, Workflow-/Regel-Worker, ERP-API-Mock und E-Mail-Mock sind Architekturkontext bzw. abhängige Systeme, aber nicht zwingend vollständig in diesem Repo implementiert.
 
@@ -32,10 +32,11 @@ Annahme: Die Teamleitung aus der Gesamtarchitektur wird in diesem Starter-Kit-Ro
 ## Scope des Prototypen
 
 **Im Scope:**
-- Antrag im Self-Service-Portal erfassen
-- Antragsstatus im Self-Service-Portal einsehen
+- Weiterbildungsantrag im Self-Service-Portal mit MVP-Pflichtfeldern erfassen
+- Antrag als `ENTWURF` speichern und als `EINGEREICHT` einreichen
+- Status eigener Anträge im Self-Service-Portal einsehen
 - Rollenbasierter Zugriff für Antragstellende und administrative Demo-Nutzung
-- Anbindung an die Backend API für Antragserstellung und Statusabfrage
+- Lokale Next.js-Backend-Logik für Formularverarbeitung, Validierung und Statuslogik
 - Berücksichtigung der Architekturabhängigkeiten zu ERP-API-Mock und E-Mail-Mock gemäss DSL
 - Lokaler Betrieb via VS Code Port Forwarding
 
@@ -58,9 +59,11 @@ Annahme: Die Teamleitung aus der Gesamtarchitektur wird in diesem Starter-Kit-Ro
 
 Annahme: Das zentrale Prozessobjekt ist ein Antrag bzw. Fall mit Status. Die Gesamtarchitektur nennt Demo-Anträge, Fallstatus, Kommentare, Audit-Einträge und Testdaten, legt aber keine detaillierten Portal-Felder fest.
 
-Demo-Entitäten im Starter-Kit (als Muster, anpassen/ersetzen):
-- `Antrag`: id, titel, beschreibung, status (ENTWURF/EINGEREICHT/GENEHMIGT/ABGELEHNT), ersteller
-- `Person`: id, vorname, nachname, email, telefon, adresse
+Aktuelle fachliche Zielrichtung gemäss PRD `docs/project/prds/self-service-portal-v002.md`:
+- `Weiterbildungsantrag` als zentrales Prozessobjekt mit MVP-Feldern `titel`, `anbieter`, `startdatum`, optional `enddatum`, `kostenChf`, `kostenstelle`, `begruendung`, optional `bemerkung`
+- Statusmodell mit mindestens `ENTWURF`, `EINGEREICHT`, `IN_RUECKFRAGE`, `GENEHMIGT`, `ABGELEHNT`, `ZURUECKGEZOGEN`
+
+Starter-Kit-Demo-Entitäten wie generischer `Antrag`, `Person`, KI-Demo- oder Upload-Bezüge gelten nur als Übergangsbasis und sollen bei Planung und Umsetzung nicht das fachliche Zielmodell verdrängen.
 
 ## Entwicklungsstand
 
