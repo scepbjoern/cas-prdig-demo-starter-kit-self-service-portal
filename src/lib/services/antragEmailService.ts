@@ -34,13 +34,11 @@ export async function processIncomingEmail(email: IncomingEmail): Promise<Proces
     return { success: false, error: `Antrag ${antragId} nicht gefunden` }
   }
 
-  const neuerEintrag = formatNotizEintrag(email)
-  const aktualisiertNotizen = (antrag.notizen ?? '') + neuerEintrag
-
-  await prisma.antrag.update({
-    where: { id: antragId },
-    data: { notizen: aktualisiertNotizen },
-  })
-
-  return { success: true, antragId }
+  // Das MVP-Datenmodell fuehrt keinen Kommunikationsverlauf mehr auf dem Antrag.
+  formatNotizEintrag(email)
+  return {
+    success: false,
+    antragId,
+    error: 'E-Mail-Verarbeitung ist im MVP des Self-Service-Portals nicht aktiv.',
+  }
 }

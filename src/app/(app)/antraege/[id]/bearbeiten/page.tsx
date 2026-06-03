@@ -26,7 +26,7 @@ export default async function BearbeitenPage({ params }: { params: Promise<{ id:
   }
 
   return (
-    <div className="mx-auto max-w-xl space-y-6">
+    <div className="mx-auto max-w-3xl space-y-6">
       <div className="flex items-center gap-2">
         <Button asChild variant="ghost" size="sm">
           <Link href={`/antraege/${id}`}>
@@ -41,7 +41,13 @@ export default async function BearbeitenPage({ params }: { params: Promise<{ id:
           mode="edit"
           defaultValues={{
             titel: antrag.titel,
-            beschreibung: antrag.beschreibung ?? '',
+            anbieter: antrag.anbieter,
+            startdatum: antrag.startdatum.toISOString().slice(0, 10),
+            enddatum: antrag.enddatum ? antrag.enddatum.toISOString().slice(0, 10) : '',
+            kostenChf: String(antrag.kostenChf),
+            kostenstelle: antrag.kostenstelle,
+            begruendung: antrag.begruendung,
+            bemerkung: antrag.bemerkung ?? '',
           }}
           action={action}
         />

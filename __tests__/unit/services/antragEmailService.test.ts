@@ -1,6 +1,20 @@
-import { describe, it, expect } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { extrahiereAntragId, formatNotizEintrag } from '@/lib/services/antragEmailService'
+import { processIncomingEmail } from '@/lib/services/antragEmailService'
 import type { IncomingEmail } from '@/lib/services/antragEmailService'
+
+const { findUniqueMock } = vi.hoisted(() => ({
+  findUniqueMock: vi.fn(),
+}))
+
+vi.mock('@/lib/prisma', () => ({
+  prisma: {
+    antrag: {
+      findUnique: findUniqueMock,
+      update: vi.fn(),
+    },
+  },
+}))
 
 describe('extrahiereAntragId', () => {
   it('extrahiert ID aus eckigen Klammern [clxxxxxxxxxxxxxxxxxx]', () => {
@@ -62,5 +76,24 @@ describe('formatNotizEintrag', () => {
     }
     const result = formatNotizEintrag(email)
     expect(result).toContain('Mein Kommentar zum Antrag')
+  })
+})
+
+describe('processIncomingEmail', () => {
+  beforeEach(() => {
+    findUniqueMock.mockResolvedValue({ id: 'cltest1234567890123456' })
+  })
+
+  it('liefert im MVP eine kontrollierte Nicht-aktiv-Meldung', async () => {
+    const result = await processIncomingEmail({
+      from: 'reviewer@example.com',
+      subject: 'Antrag: cltest1234567890123456',
+      text: 'Rueckfrage fuer die Demo',
+      receivedAt: new Date('2025-01-15T10:30:00Z'),
+    })
+
+    expect(result.success).toBe(false)
+    expect(result.antragId).toBe('cltest1234567890123456')
+    expect(result.error).toContain('nicht aktiv')
   })
 })

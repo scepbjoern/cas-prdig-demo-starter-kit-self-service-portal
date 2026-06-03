@@ -42,9 +42,45 @@ async function main() {
   console.log('Erstelle Demo-Anträge...')
   await prisma.antrag.createMany({
     data: [
-      { titel: 'Urlaubsantrag Juli', beschreibung: 'Urlaub vom 1.–14. Juli', status: 'EINGEREICHT', erstellerId: applicant.id, plzOrt: 'Zürich', kanton: 'ZH' },
-      { titel: 'Weiterbildungsantrag', beschreibung: 'CAS Kurs ZHAW', status: 'GENEHMIGT', erstellerId: applicant.id, plzOrt: 'Winterthur', kanton: 'ZH' },
-      { titel: 'Materialbestellung', status: 'ENTWURF', erstellerId: applicant.id, plzOrt: null, kanton: null },
+      {
+        titel: 'CAS Prozessdigitalisierung',
+        anbieter: 'ZHAW School of Management and Law',
+        startdatum: new Date('2026-09-01'),
+        enddatum: new Date('2026-12-15'),
+        kostenChf: 5900,
+        kostenstelle: 'WB-1000',
+        begruendung:
+          'Die Weiterbildung staerkt unsere Faehigkeiten in Prozessanalyse, Automatisierung und digitaler Zusammenarbeit.',
+        bemerkung: 'Unterlagen fuer die Demo sind bereits vorbereitet.',
+        status: 'EINGEREICHT',
+        erstellerId: applicant.id,
+      },
+      {
+        titel: 'Lean Six Sigma Green Belt',
+        anbieter: 'Akademie Nordstern',
+        startdatum: new Date('2026-10-10'),
+        enddatum: new Date('2027-01-20'),
+        kostenChf: 3200,
+        kostenstelle: 'OPS-204',
+        begruendung:
+          'Die Weiterbildung hilft dabei, Prozessqualitaet messbar zu verbessern und Verschwendung im Tagesgeschaeft zu reduzieren.',
+        bemerkung: undefined,
+        status: 'GENEHMIGT',
+        erstellerId: applicant.id,
+      },
+      {
+        titel: 'Workshop Service Design Grundlagen',
+        anbieter: 'Institut Morgenrot',
+        startdatum: new Date('2026-11-05'),
+        enddatum: undefined,
+        kostenChf: 780,
+        kostenstelle: 'INNO-315',
+        begruendung:
+          'Der Workshop unterstuetzt die nutzerzentrierte Weiterentwicklung des Self-Service-Portals und verbessert unsere Interviewmethoden.',
+        bemerkung: 'Termin ist reserviert, Einreichung folgt nach letzter Ruecksprache.',
+        status: 'ENTWURF',
+        erstellerId: applicant.id,
+      },
     ]
   })
 

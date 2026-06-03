@@ -12,8 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog'
-import { submitAntrag, decideAntrag, deleteAntrag } from '../actions'
-import type { AntragStatus } from '@/generated/prisma/enums'
+import { submitAntrag, deleteAntrag } from '../actions'
 
 export function SubmitButton({ id }: { id: string }) {
   const [isPending, startTransition] = useTransition()
@@ -36,40 +35,6 @@ export function SubmitButton({ id }: { id: string }) {
             disabled={isPending}
           >
             {isPending ? 'Wird eingereicht...' : 'Ja, einreichen'}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
-}
-
-export function DecideButton({ id, newStatus, label, variant }: {
-  id: string
-  newStatus: AntragStatus
-  label: string
-  variant?: 'default' | 'destructive' | 'outline'
-}) {
-  const [isPending, startTransition] = useTransition()
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button variant={variant ?? 'default'} disabled={isPending}>{label}</Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{label}?</DialogTitle>
-          <DialogDescription>Diese Aktion kann nicht rückgängig gemacht werden.</DialogDescription>
-        </DialogHeader>
-        <DialogFooter>
-          <Button
-            variant={variant ?? 'default'}
-            onClick={() => startTransition(async () => {
-              try { await decideAntrag(id, newStatus); toast.success(`Antrag ${label.toLowerCase()}`) }
-              catch (e: unknown) { toast.error(e instanceof Error ? e.message : 'Fehler') }
-            })}
-            disabled={isPending}
-          >
-            {isPending ? '...' : 'Bestätigen'}
           </Button>
         </DialogFooter>
       </DialogContent>

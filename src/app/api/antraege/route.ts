@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/auth-helpers'
-import { antragCreateSchema } from '@/lib/schemas/antrag'
+import { antragCreateSchema, normalizeAntragInput } from '@/lib/schemas/antrag'
 import type { Role } from '@/lib/auth-helpers'
 
 export async function GET() {
@@ -33,9 +33,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Keine Berechtigung' }, { status: 403 })
   }
 
-  let body: { titel: string; beschreibung?: string }
+  let body
   try {
-    body = antragCreateSchema.parse(await request.json())
+    body = antragCreateSchema.parse(normalizeAntragInput(await request.json()))
   } catch (error: unknown) {
     const zodError = error as { errors?: unknown[] }
     return NextResponse.json(

@@ -4,17 +4,32 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { requireSession, requireRole } from '@/lib/auth-helpers'
-import { antragCreateSchema, antragUpdateSchema, antragStatusSchema } from '@/lib/schemas/antrag'
+import {
+  antragCreateSchema,
+  antragUpdateSchema,
+  antragStatusSchema,
+  normalizeAntragInput,
+} from '@/lib/schemas/antrag'
 import { ANTRAG_STATUS_TRANSITIONS } from '@/lib/antrag-status'
 import type { AntragStatus } from '@/generated/prisma/enums'
+
+function getAntragFormValues(formData: FormData) {
+  return normalizeAntragInput({
+    titel: formData.get('titel'),
+    anbieter: formData.get('anbieter'),
+    startdatum: formData.get('startdatum'),
+    enddatum: formData.get('enddatum'),
+    kostenChf: formData.get('kostenChf'),
+    kostenstelle: formData.get('kostenstelle'),
+    begruendung: formData.get('begruendung'),
+    bemerkung: formData.get('bemerkung'),
+  })
+}
 
 export async function createAntrag(formData: FormData) {
   const session = await requireRole(['user_applicant', 'admin'])
 
-  const raw = {
-    titel: formData.get('titel'),
-    beschreibung: formData.get('beschreibung') || undefined,
-  }
+  const raw = getAntragFormValues(formData)
   const parsed = antragCreateSchema.safeParse(raw)
   if (!parsed.success) throw new Error(parsed.error.message)
 
@@ -38,10 +53,7 @@ export async function updateAntrag(id: string, formData: FormData) {
     throw new Error('Keine Berechtigung')
   }
 
-  const raw = {
-    titel: formData.get('titel'),
-    beschreibung: formData.get('beschreibung') || undefined,
-  }
+  const raw = getAntragFormValues(formData)
   const parsed = antragUpdateSchema.safeParse(raw)
   if (!parsed.success) throw new Error(parsed.error.message)
 

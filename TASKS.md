@@ -10,13 +10,8 @@
 - Kein Feature gilt als done ohne dokumentierte Validierung in der Feature-Datei
 - Status-Werte: planned | in_progress | needs_human | validating | done
 
-## Aktive Features
-
-| Feature | Status | Datei | Erstellt |
-|---|---|---|---|
-| Datenmodell Weiterbildungsantrag | planned | [plan](docs/project/features/datenmodell-weiterbildungsantrag/plan-v002.md) | 2026-06-03 |
-
 ## Abgeschlossene Features
 
 | Feature | Datei | Abgeschlossen |
 |---|---|---|
+| Datenmodell Weiterbildungsantrag | [plan](docs/project/features/datenmodell-weiterbildungsantrag/plan-v002.md) | 2026-06-03 |

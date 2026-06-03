@@ -37,7 +37,7 @@ export default async function DashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">
-              {isApplicant ? 'Meine Anträge' : 'Alle Anträge'}
+              {isApplicant ? 'Meine Weiterbildungsantraege' : 'Alle Weiterbildungsantraege'}
             </CardTitle>
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
@@ -69,7 +69,7 @@ export default async function DashboardPage() {
 
       <div className="flex gap-3">
         <Button asChild>
-          <Link href="/antraege">Anträge anzeigen</Link>
+          <Link href="/antraege">Antraege anzeigen</Link>
         </Button>
         {(role === 'user_applicant' || role === 'admin') && (
           <Button asChild variant="outline">

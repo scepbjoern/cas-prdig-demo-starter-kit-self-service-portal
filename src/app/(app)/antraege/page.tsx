@@ -23,7 +23,7 @@ export default async function AntraegePage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold tracking-tight">Anträge</h1>
+        <h1 className="text-2xl font-semibold tracking-tight">Weiterbildungsantraege</h1>
         {(role === 'user_applicant' || role === 'admin') && (
           <Button asChild>
             <Link href="/antraege/neu">Neuer Antrag</Link>
@@ -41,8 +41,9 @@ export default async function AntraegePage() {
             <TableHeader>
               <TableRow>
                 <TableHead>Titel</TableHead>
+                <TableHead>Anbieter</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead>Ersteller</TableHead>
+                <TableHead>Startdatum</TableHead>
                 <TableHead>Erstellt am</TableHead>
                 <TableHead className="w-24" />
               </TableRow>
@@ -51,12 +52,15 @@ export default async function AntraegePage() {
               {antraege.map((a) => (
                 <TableRow key={a.id}>
                   <TableCell className="font-medium">{a.titel}</TableCell>
+                  <TableCell>{a.anbieter}</TableCell>
                   <TableCell>
                     <Badge variant={ANTRAG_STATUS_VARIANT[a.status as AntragStatus]}>
                       {ANTRAG_STATUS_LABEL[a.status as AntragStatus]}
                     </Badge>
                   </TableCell>
-                  <TableCell>{a.ersteller.name}</TableCell>
+                  <TableCell>
+                    {format(new Date(a.startdatum), 'dd.MM.yyyy', { locale: de })}
+                  </TableCell>
                   <TableCell>
                     {format(new Date(a.erstelltAm), 'dd.MM.yyyy', { locale: de })}
                   </TableCell>

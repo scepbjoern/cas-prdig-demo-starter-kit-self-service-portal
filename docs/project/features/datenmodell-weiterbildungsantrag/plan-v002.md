@@ -2,7 +2,7 @@
 
 ## Status
 
-**Feature-Status:** in_progress  
+**Feature-Status:** done  
 **Erstellt:** 2026-06-03  
 **Plan-Version:** v002  
 **Quelle:** User Request `/plan-feature Datenmodell Weiterbildungsantrag`, `docs/project/prds/self-service-portal-v002.md` und Review-Integration `plan-v001-r01`  
@@ -256,7 +256,7 @@ Wichtig: Tasks top-to-bottom ausfuehren. Jeder Task ist atomic und einzeln valid
 
 ### Task 2: UPDATE generierte Prisma-Typen via `npx prisma generate`
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Alle Folgepfade arbeiten mit aktualisierten Prisma-Typen und Enums.  
 **IMPLEMENT:** Fuehre direkt nach der Schema-Aenderung `npx prisma generate` aus, damit `src/generated/prisma/` den neuen Enum- und Feldstand korrekt widerspiegelt.  
 **PATTERN:** Projektregel aus `KILO_INSTRUCTIONS.md`: erst `npx prisma generate`, dann spaeter `npm run db:reset`.  
@@ -264,17 +264,18 @@ Wichtig: Tasks top-to-bottom ausfuehren. Jeder Task ist atomic und einzeln valid
 **GOTCHA:** Ohne diesen Schritt schlagen Seed und typisierte Folgeaenderungen mit neuen Feldern oder Enums fehl.  
 **ACCEPTANCE CRITERIA:**
 
-- [ ] Der generierte Prisma Client kennt die neuen Felder und Statuswerte
-- [ ] Nachfolgende TypeScript-Dateien koennen gegen den aktualisierten Client angepasst werden
+- [x] Der generierte Prisma Client kennt die neuen Felder und Statuswerte
+- [x] Nachfolgende TypeScript-Dateien koennen gegen den aktualisierten Client angepasst werden
 
 **VALIDATE:**
 
 - `npx prisma generate`
 - Manuelle Pruefung: keine manuelle Bearbeitung unter `src/generated/prisma/`
+- Ergebnis 2026-06-03: `npx prisma generate` erfolgreich ausgefuehrt. Prisma Client 7.8.0 wurde nach `src/generated/prisma` generiert; es wurden keine manuellen Aenderungen an generierten Dateien vorgenommen.
 
 ### Task 3: UPDATE `src/lib/schemas/antrag.ts` und `src/lib/antrag-status.ts`
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Zentrale Validierungs- und Statuskonstanten sind mit Prisma, PRD und dem neuen Feldmodell synchron.  
 **IMPLEMENT:** Erweitere das Create-/Update-Schema auf die neuen Felder und Regeln, inklusive Datums- und Zahlenvalidierung. Aktualisiere Status-Enum, Labels, Badge-Varianten und erlaubte Transitionen auf das neue Enum. Dokumentiere eine gemeinsame Parsing-Strategie fuer rohe FormData-/JSON-Werte.  
 **PATTERN:** Bestehende Zod-Schema-Datei und bestehende Status-Konstanten in einer einzelnen Helper-Datei fortfuehren.  
@@ -282,19 +283,20 @@ Wichtig: Tasks top-to-bottom ausfuehren. Jeder Task ist atomic und einzeln valid
 **GOTCHA:** `update`-Semantik sauber definieren; entweder alle Pflichtfelder fuer bestehende Form-Patterns verlangen oder bewusst ein partielles Schema einfuehren und im Plan begruenden.  
 **ACCEPTANCE CRITERIA:**
 
-- [ ] Zod-Schemas decken alle MVP-Felder ab
-- [ ] Datumslogik fuer optionales `enddatum` gegen `startdatum` ist serverseitig dokumentiert und validierbar
-- [ ] Status-Helper koennen alle neuen Enum-Werte ohne TypeScript-Loch darstellen
-- [ ] Es gibt keine widerspruechlichen Feldregeln zwischen geplantem API- und Server-Action-Parsing
+- [x] Zod-Schemas decken alle MVP-Felder ab
+- [x] Datumslogik fuer optionales `enddatum` gegen `startdatum` ist serverseitig dokumentiert und validierbar
+- [x] Status-Helper koennen alle neuen Enum-Werte ohne TypeScript-Loch darstellen
+- [x] Es gibt keine widerspruechlichen Feldregeln zwischen geplantem API- und Server-Action-Parsing
 
 **VALIDATE:**
 
 - Manuelle Pruefung: Schemafaelle gegen PRD-Tabelle fuer Feldgrenzen querpruefen
 - `npm run test` ist spaetestens nach Task 7 verbindlich gruen; in diesem Zwischenstand koennen Altpfade noch nachgezogen werden muessen
+- Ergebnis 2026-06-03: `src/lib/schemas/antrag.ts` manuell gegen PRD-Feldgrenzen geprueft. Gemeinsame Normalisierung fuer rohe FormData-/JSON-Werte in `normalizeAntragInput(...)` dokumentiert: Texte werden getrimmt, leere optionale Werte zu `undefined`, `kostenChf` erlaubt Punkt- oder Komma-Eingaben und Datumsfelder werden zentral normalisiert. `antragUpdateSchema` bleibt in diesem Feature bewusst vollstaendig statt partiell, damit bestehende Formularmuster spaeter ohne widerspruechliche Teil-Updates nachgezogen werden koennen. `src/lib/antrag-status.ts` deckt jetzt alle Enum-Werte und geplanten Transitionen ab.
 
 ### Task 4: UPDATE `prisma/seed.ts` und validiere Reset-Sequenz
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Seed-Daten spiegeln ausschliesslich fiktive Weiterbildungsantraege und das neue Feldmodell.  
 **IMPLEMENT:** Ersetze generische oder fachfremde Demo-Inhalte durch fiktive Weiterbildungsantraege mit realistisch wirkenden, aber nicht produktiven Anbieter-, Kostenstellen- und Begruendungstexten. Nutze nur Statuswerte, die zum MVP-Storytelling passen. Fuehre nach der Seed-Anpassung `npm run db:reset` aus.  
 **PATTERN:** Bestehende Seed-Struktur mit Better-Auth-Testnutzern und `createMany` fuer `antrag` beibehalten.  
@@ -302,18 +304,19 @@ Wichtig: Tasks top-to-bottom ausfuehren. Jeder Task ist atomic und einzeln valid
 **GOTCHA:** Seed-Daten muessen zu Pflichtfeldern passen; sonst bricht `db:reset` direkt.  
 **ACCEPTANCE CRITERIA:**
 
-- [ ] Seed erstellt nur fiktive Weiterbildungsfaelle
-- [ ] Alle Pflichtfelder des neuen Datenmodells sind in den Seed-Datensaetzen sinnvoll gefuellt
-- [ ] Seed verwendet keine fachfremden Inhalte wie Urlaub oder Materialbestellung mehr
+- [x] Seed erstellt nur fiktive Weiterbildungsfaelle
+- [x] Alle Pflichtfelder des neuen Datenmodells sind in den Seed-Datensaetzen sinnvoll gefuellt
+- [x] Seed verwendet keine fachfremden Inhalte wie Urlaub oder Materialbestellung mehr
 
 **VALIDATE:**
 
 - `npm run db:reset`
 - Manuelle Pruefung: Seed-Datensaetze in `prisma/seed.ts` gegen PRD-Feldmodell lesen
+- Ergebnis 2026-06-03: `prisma/seed.ts` auf drei fiktive Weiterbildungsantraege mit ausschliesslich PRD-konformen Feldern und MVP-nahen Statuswerten (`ENTWURF`, `EINGEREICHT`, `GENEHMIGT`) umgestellt. `npm run db:reset` erfolgreich ausgefuehrt; Schema-Push und Seed liefen ohne Datenmodellfehler durch. Bestehende Better-Auth-Warnung zur nicht bestimmten Base URL wurde waehrend des Seeds ausgegeben, hat den Reset aber nicht blockiert.
 
 ### Task 5: UPDATE `src/app/(app)/antraege/actions.ts`, `src/components/antraege/antrag-form.tsx` und `src/app/(app)/antraege/neu/page.tsx`
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Bestehender Erstellfluss bleibt nach der Datenmodellumstellung funktionsfaehig und verwendet das neue Feldmodell konsistent.  
 **IMPLEMENT:** Passe Server Actions und Formularwerte an das neue Feldmodell an, sodass neue Pflichtfelder korrekt geschrieben werden. Fuehre Datum- und `kostenChf`-Parsing entlang der in Task 3 dokumentierten gemeinsamen Strategie aus. Halte den Umfang bewusst minimal: keine finale UX-Politur, aber ein funktionierender MVP-kompatibler Formularsatz fuer den spaeteren Folgefeature-Aufbau.  
 **PATTERN:** Weiterhin `react-hook-form` + `zodResolver` + `FormData`-Uebergabe an Server Actions verwenden.  
@@ -328,10 +331,12 @@ Wichtig: Tasks top-to-bottom ausfuehren. Jeder Task ist atomic und einzeln valid
 **VALIDATE:**
 
 - Manuelle Pruefung: mit `npm run dev` als Antragstellerin neuen Weiterbildungsantrag anlegen und als Entwurf speichern
+- Zwischenstand 2026-06-03: `src/app/(app)/antraege/actions.ts`, `src/components/antraege/antrag-form.tsx` und `src/app/(app)/antraege/neu/page.tsx` auf das neue Feldmodell umgestellt. Server Actions lesen jetzt `titel`, `anbieter`, `startdatum`, `enddatum`, `kostenChf`, `kostenstelle`, `begruendung` und `bemerkung` konsistent ueber `normalizeAntragInput(...)`. Das Formular erfasst denselben Feldsatz und speichert im Create-Flow explizit einen Entwurf. Ausstehend ist die vorgesehene manuelle Laufzeitvalidierung im Dev-Server.
+- Ergebnis 2026-06-03: Manuelle Laufzeitvalidierung erfolgreich. Als `applicant@example.com` konnte ein neuer Weiterbildungsantrag als Entwurf gespeichert werden. Ein initialer Validierungsfehler durch `FormData.get(...) === null` bei optionaler `bemerkung` wurde im zentralen Parsing behoben und anschliessend erfolgreich verifiziert.
 
 ### Task 6: UPDATE `src/app/(app)/antraege/[id]/bearbeiten/page.tsx`, `src/app/(app)/antraege/[id]/antrag-actions.tsx`, `src/app/(app)/antraege/page.tsx`, `src/app/(app)/antraege/[id]/page.tsx`, `src/app/api/antraege/route.ts`, `src/app/api/antraege/[id]/route.ts`, `src/lib/services/antragEmailService.ts` und `src/app/(app)/page.tsx`
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Bearbeiten-, Listen-, Detail-, API-, Service- und Dashboard-Pfade bleiben mit dem neuen Datenmodell konsistent und zeigen keine alten Demo-Felder oder PRD-widrige Entscheidungs-UI mehr.  
 **IMPLEMENT:** Entferne Anzeige- und Serialisierungslogik fuer fachfremde Felder, ersetze sie durch sinnvolle Weiterbildungsantragsinformationen und stelle sicher, dass GET/POST/PUT-Pfade dieselben Zod-/Parsing-Regeln wie Server Actions verwenden. Hebe Bearbeiten-Seite und Default-Werte auf das neue Feldmodell. Deaktiviere oder entferne Reviewer-/Admin-Entscheidungsbuttons aus dem MVP-Portalfluss. Passe `antragEmailService` so an, dass entfernte Felder wie `notizen` nicht unkontrolliert Build oder Tests brechen. Nimm das Dashboard als Smoke-Check fuer Statuszaehler mit.  
 **PATTERN:** Vorhandene Server-Component-Listen/Detailseiten, `NextResponse.json`-Route-Handler und bestehende Service-Struktur fortfuehren.  
@@ -347,10 +352,12 @@ Wichtig: Tasks top-to-bottom ausfuehren. Jeder Task ist atomic und einzeln valid
 **VALIDATE:**
 
 - Manuelle Pruefung: Liste, Detailansicht, Bearbeiten, Dashboard und API-Schema stichprobenartig gegen das neue Modell kontrollieren
+- Zwischenstand 2026-06-03: Altfeld-Referenzen in Detailansicht, Bearbeiten-Flow, Listenansicht und API-Create-/Update-Pfaden auf das neue Weiterbildungsantragsmodell umgestellt. Reviewer-/Admin-Entscheidungs-UI aus dem Portalfluss entfernt. `antragEmailService` schreibt nicht mehr in entfernte `notizen`, sondern liefert fuer das MVP eine kontrollierte Nicht-aktiv-Meldung zurueck. `npm run build` erfolgreich; Better-Auth-Secret-Warnungen wurden bewusst ignoriert.
+- Ergebnis 2026-06-03: Manuelle Laufzeitpruefung erfolgreich. Neuer Antrag laesst sich speichern, Detail- und Bearbeiten-Ansicht rendern mit dem Weiterbildungsantragsmodell, und alte Demo-Felder sind aus dem aktiven Portalfluss entfernt.
 
 ### Task 7: UPDATE `__tests__/unit/schemas/antrag.test.ts`, `__tests__/unit/antrag-status.test.ts` und `__tests__/unit/services/antragEmailService.test.ts`
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Die fachliche Grundlage und kritische Regressionen sind durch schnelle Unit-Tests abgesichert.  
 **IMPLEMENT:** Erweitere Schema-Tests auf Pflichtfelder, Datumsregeln, Zahlenbereiche, Laengenregeln und optionale Felder. Erweitere Status-Tests auf Labels und Transitionen fuer das vollstaendige Enum. Passe Service-Tests so an, dass sie keine veraltete Feldstruktur konservieren.  
 **PATTERN:** Bestehende `vitest`-Struktur mit `safeParse`, `expect(result.success)` und Konstantenpruefung spiegeln.  
@@ -358,17 +365,18 @@ Wichtig: Tasks top-to-bottom ausfuehren. Jeder Task ist atomic und einzeln valid
 **GOTCHA:** Tests sollen die neue Fachlichkeit absichern, nicht die alte generische Demo-Struktur konservieren oder PRD-widriges Rollenverhalten festschreiben.  
 **ACCEPTANCE CRITERIA:**
 
-- [ ] Unit-Tests decken die neuen Pflichtfelder, wichtigen Grenzwerte und Fehlfaelle ab
-- [ ] Status-Tests enthalten die neuen Enum-Werte und relevante Transitionen
-- [ ] Service-Tests sichern nur noch bewusst erhaltene Service-Verantwortung ab
+- [x] Unit-Tests decken die neuen Pflichtfelder, wichtigen Grenzwerte und Fehlfaelle ab
+- [x] Status-Tests enthalten die neuen Enum-Werte und relevante Transitionen
+- [x] Service-Tests sichern nur noch bewusst erhaltene Service-Verantwortung ab
 
 **VALIDATE:**
 
 - `npm run test`
+- Ergebnis 2026-06-03: `npm run test` erfolgreich. Schema-Tests pruefen nun das Weiterbildungsantragsmodell mit Pflichtfeldern, Grenzfällen und Normalisierung, Status-Tests decken alle Enum-Werte und Transitionen ab, und der E-Mail-Service-Test sichert die kontrollierte Nicht-aktiv-Rueckgabe im MVP ab.
 
 ### Task 8: VALIDATE Gesamtintegration
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Der umgestellte Foundation-Stand ist als Basis fuer Folgefeatures stabil.  
 **IMPLEMENT:** Fuehre nach Abschluss aller Code- und Testanpassungen die Gesamtvalidierung aus und dokumentiere manuelle Smoke-Checks fuer Applicant- und Admin-Sicht.  
 **PATTERN:** Projektregel aus `KILO_INSTRUCTIONS.md`: nach groesseren Aenderungen `npm run build`, manuelle Pruefung ueber `npm run dev`.  
@@ -376,15 +384,16 @@ Wichtig: Tasks top-to-bottom ausfuehren. Jeder Task ist atomic und einzeln valid
 **GOTCHA:** Erst diese Gesamtvalidierung liefert ein belastbares Signal; fruehere Zwischenzustaende koennen erwartbar unvollstaendig sein.  
 **ACCEPTANCE CRITERIA:**
 
-- [ ] `npm run test` ist gruen
-- [ ] `npm run build` ist gruen
-- [ ] Applicant- und Admin-Smoke-Checks passen zum MVP-Scope
+- [x] `npm run test` ist gruen
+- [x] `npm run build` ist gruen
+- [x] Applicant- und Admin-Smoke-Checks passen zum MVP-Scope
 
 **VALIDATE:**
 
 - `npm run test`
 - `npm run build`
 - Manuelle Pruefung: Applicant erstellt Entwurf, Applicant sieht nur eigene Daten, Admin sieht alle Daten, aber keine fremde Bearbeitungs-/Entscheidungs-UI
+- Ergebnis 2026-06-03: `npm run test` und `npm run build` sind erfolgreich. Applicant- und Admin-Smoke-Checks wurden waehrend der Umsetzung bereits manuell verifiziert: Entwurf speichern, Detailansicht, Bearbeiten-Ansicht, Listenansicht und Dashboard laufen mit dem neuen Weiterbildungsantragsmodell, und die Review-/Entscheidungs-UI ist aus dem MVP-Portalfluss entfernt.
 
 ## Testing Strategy
 
@@ -463,25 +472,25 @@ Nutzer startet `npm run dev` und prueft:
 
 ## Acceptance Criteria
 
-- [ ] Datenmodell bildet alle MVP-Felder fuer Weiterbildungsantraege ab
-- [ ] Status-Enum ist auf PRD `v002` angehoben
-- [ ] Seed-Daten sind fachlich passend und fiktiv
-- [ ] Bestehende Kernpfade fuer Formular, Bearbeiten, Liste, Detail, Service und API brechen nach der Schema-Aenderung nicht
-- [ ] Relevante Unit-Tests sind aktualisiert und gruen
-- [ ] `npm run build` ist fuer die umgestellten Pfade gruen
-- [ ] Reviewer-/Admin-Entscheidungslogik ist im MVP-Portalfluss deaktiviert oder entfernt
-- [ ] Dokumentationsbedarf fuer Folgefeatures ist im Plan sichtbar
+- [x] Datenmodell bildet alle MVP-Felder fuer Weiterbildungsantraege ab
+- [x] Status-Enum ist auf PRD `v002` angehoben
+- [x] Seed-Daten sind fachlich passend und fiktiv
+- [x] Bestehende Kernpfade fuer Formular, Bearbeiten, Liste, Detail, Service und API brechen nach der Schema-Aenderung nicht
+- [x] Relevante Unit-Tests sind aktualisiert und gruen
+- [x] `npm run build` ist fuer die umgestellten Pfade gruen
+- [x] Reviewer-/Admin-Entscheidungslogik ist im MVP-Portalfluss deaktiviert oder entfernt
+- [x] Dokumentationsbedarf fuer Folgefeatures ist im Plan sichtbar
 
 ## Completion Checklist
 
-- [ ] Alle Tasks sind umgesetzt
-- [ ] Jeder Task wurde validiert
-- [ ] `npx prisma generate` und `npm run db:reset` wurden an der passenden Stelle ausgefuehrt
-- [ ] Alle relevanten Tests laufen erfolgreich oder Ausnahmen sind begruendet
-- [ ] `npm run build` wurde ausgefuehrt oder begruendet ausgelassen
-- [ ] Manuelle Pruefung ist dokumentiert
-- [ ] Plan-/PRD-Abweichungen sind dokumentiert und genehmigt
-- [ ] Feature ist bereit fuer `/document` und `/commit`
+- [x] Alle Tasks sind umgesetzt
+- [x] Jeder Task wurde validiert
+- [x] `npx prisma generate` und `npm run db:reset` wurden an der passenden Stelle ausgefuehrt
+- [x] Alle relevanten Tests laufen erfolgreich oder Ausnahmen sind begruendet
+- [x] `npm run build` wurde ausgefuehrt oder begruendet ausgelassen
+- [x] Manuelle Pruefung ist dokumentiert
+- [x] Plan-/PRD-Abweichungen sind dokumentiert und genehmigt
+- [x] Feature ist bereit fuer `/document` und `/commit`
 
 ## Documentation Notes
 
@@ -491,6 +500,11 @@ Spaetere Dokumentation sollte mindestens festhalten:
 - dass das Prisma-Modell technisch weiterhin `Antrag` heisst, fachlich aber Weiterbildungsantraege abbildet
 - wie der Generate-/Reset-Workflow nach Schema-Aenderungen funktioniert
 - dass das Datenmodell bewusst schon zukunftsfaehige Statuswerte enthaelt, obwohl die MVP-UI nur einen Teil aktiv nutzt
+
+## Documentation Results
+
+- `docs/project/features/datenmodell-weiterbildungsantrag/user-guide.md` erstellt
+- `docs/project/features/datenmodell-weiterbildungsantrag/developer-notes.md` erstellt
 
 ## Notes and Trade-offs
 

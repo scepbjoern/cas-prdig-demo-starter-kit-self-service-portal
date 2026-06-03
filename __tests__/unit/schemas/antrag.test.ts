@@ -1,44 +1,113 @@
 import { describe, it, expect } from 'vitest'
-import { antragCreateSchema, antragUpdateSchema } from '@/lib/schemas/antrag'
+import { antragCreateSchema, antragUpdateSchema, normalizeAntragInput } from '@/lib/schemas/antrag'
 
 describe('antragCreateSchema', () => {
-  it('akzeptiert gültigen Antrag mit Titel', () => {
-    const result = antragCreateSchema.safeParse({ titel: 'Mein Antrag' })
+  it('akzeptiert gültigen Weiterbildungsantrag', () => {
+    const result = antragCreateSchema.safeParse(
+      normalizeAntragInput({
+        titel: 'CAS Prozessdigitalisierung',
+        anbieter: 'ZHAW School of Management and Law',
+        startdatum: '2026-09-01',
+        enddatum: '2026-12-15',
+        kostenChf: '5900',
+        kostenstelle: 'WB-1000',
+        begruendung:
+          'Die Weiterbildung staerkt die Faehigkeiten in Prozessanalyse und digitaler Zusammenarbeit deutlich.',
+        bemerkung: 'Optionaler Hinweis',
+      })
+    )
     expect(result.success).toBe(true)
   })
 
-  it('akzeptiert Antrag mit Titel und Beschreibung', () => {
-    const result = antragCreateSchema.safeParse({
-      titel: 'Mein Antrag',
-      beschreibung: 'Detaillierte Beschreibung',
+  it('normalisiert leere optionale Felder zu undefined', () => {
+    const result = normalizeAntragInput({
+      titel: 'CAS Prozessdigitalisierung',
+      anbieter: 'ZHAW School of Management and Law',
+      startdatum: '2026-09-01',
+      enddatum: '',
+      kostenChf: '5900',
+      kostenstelle: 'WB-1000',
+      begruendung:
+        'Die Weiterbildung staerkt die Faehigkeiten in Prozessanalyse und digitaler Zusammenarbeit deutlich.',
+      bemerkung: null,
     })
-    expect(result.success).toBe(true)
+
+    expect(result.enddatum).toBeUndefined()
+    expect(result.bemerkung).toBeUndefined()
   })
 
-  it('lehnt leeren Titel ab', () => {
-    const result = antragCreateSchema.safeParse({ titel: '' })
+  it('lehnt Enddatum vor Startdatum ab', () => {
+    const result = antragCreateSchema.safeParse(
+      normalizeAntragInput({
+        titel: 'CAS Prozessdigitalisierung',
+        anbieter: 'ZHAW School of Management and Law',
+        startdatum: '2026-09-01',
+        enddatum: '2026-08-01',
+        kostenChf: '5900',
+        kostenstelle: 'WB-1000',
+        begruendung:
+          'Die Weiterbildung staerkt die Faehigkeiten in Prozessanalyse und digitaler Zusammenarbeit deutlich.',
+        bemerkung: '',
+      })
+    )
     expect(result.success).toBe(false)
   })
 
-  it('lehnt fehlenden Titel ab', () => {
-    const result = antragCreateSchema.safeParse({})
+  it('lehnt leeren Titel ab', () => {
+    const result = antragCreateSchema.safeParse(
+      normalizeAntragInput({
+        titel: '',
+        anbieter: 'ZHAW School of Management and Law',
+        startdatum: '2026-09-01',
+        kostenChf: '5900',
+        kostenstelle: 'WB-1000',
+        begruendung:
+          'Die Weiterbildung staerkt die Faehigkeiten in Prozessanalyse und digitaler Zusammenarbeit deutlich.',
+        bemerkung: '',
+      })
+    )
+    expect(result.success).toBe(false)
+  })
+
+  it('lehnt ungueltige Kosten ab', () => {
+    const result = antragCreateSchema.safeParse(
+      normalizeAntragInput({
+        titel: 'CAS Prozessdigitalisierung',
+        anbieter: 'ZHAW School of Management and Law',
+        startdatum: '2026-09-01',
+        kostenChf: '-1',
+        kostenstelle: 'WB-1000',
+        begruendung:
+          'Die Weiterbildung staerkt die Faehigkeiten in Prozessanalyse und digitaler Zusammenarbeit deutlich.',
+        bemerkung: '',
+      })
+    )
     expect(result.success).toBe(false)
   })
 })
 
 describe('antragUpdateSchema', () => {
-  it('akzeptiert partielle Aktualisierung mit Beschreibung', () => {
-    const result = antragUpdateSchema.safeParse({ beschreibung: 'Neue Beschreibung' })
-    expect(result.success).toBe(false)
-  })
-
-  it('akzeptiert vollständige Aktualisierung mit Titel', () => {
-    const result = antragUpdateSchema.safeParse({ titel: 'Aktualisierter Titel' })
+  it('akzeptiert vollständige Aktualisierung mit den neuen Feldern', () => {
+    const result = antragUpdateSchema.safeParse(
+      normalizeAntragInput({
+        titel: 'Aktualisierter Titel',
+        anbieter: 'Neuer Anbieter',
+        startdatum: '2026-09-01',
+        enddatum: '2026-12-15',
+        kostenChf: '1234.50',
+        kostenstelle: 'WB-2000',
+        begruendung:
+          'Die Weiterbildung bleibt fachlich sinnvoll und entspricht den neuen Anforderungen.',
+        bemerkung: 'Update',
+      })
+    )
     expect(result.success).toBe(true)
   })
 
-  it('lehnt leeren Titel ab', () => {
-    const result = antragUpdateSchema.safeParse({ titel: '' })
+  it('lehnt fehlende Pflichtfelder ab', () => {
+    const result = antragUpdateSchema.safeParse({
+      titel: 'Aktualisierter Titel',
+    })
     expect(result.success).toBe(false)
   })
 })

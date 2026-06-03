@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/auth-helpers'
-import { antragIdSchema, antragUpdateSchema } from '@/lib/schemas/antrag'
+import { antragIdSchema, antragUpdateSchema, normalizeAntragInput } from '@/lib/schemas/antrag'
 import type { Role } from '@/lib/auth-helpers'
 import { Prisma } from '@/generated/prisma/client'
 
@@ -91,9 +91,9 @@ export async function PUT(
     }
   }
 
-  let body: { titel: string; beschreibung?: string }
+  let body
   try {
-    body = antragUpdateSchema.parse(await request.json())
+    body = antragUpdateSchema.parse(normalizeAntragInput(await request.json()))
   } catch (error: unknown) {
     const zodError = error as { errors?: unknown[] }
     return NextResponse.json(
