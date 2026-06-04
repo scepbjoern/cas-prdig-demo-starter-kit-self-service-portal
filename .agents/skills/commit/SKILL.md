@@ -24,10 +24,12 @@ Der Skill darf sowohl für validierte Zwischenstände während eines Features al
 Erlaubte Zeitpunkte:
 
 - Nach Erstellung des initialen PRD-Entwurfs `v001`, bevor die Review-Session startet.
+- Nach `/review-prd`, wenn das Review-Dokument abgeschlossen und in sich konsistent ist.
 - Nach Review-Integration und fachlicher Bestätigung einer neuen PRD-Version, inklusive zugehöriger Review-/Integration-Artefakte.
 - Nach `/update-prd` und fachlicher Bestätigung einer neuen PRD-Version, inklusive zugehöriger Update-Datei.
 - Nach erfolgreicher `/adapt-to-project`-Bereinigung inklusive dokumentierter Build-Validierung.
 - Nach Erstellung des initialen Feature-Plans `plan-v001.md`, bevor die Feature-Plan-Review-Session startet.
+- Nach `/review-feature-plan`, wenn das Review-Dokument abgeschlossen und in sich konsistent ist.
 - Nach Review-Integration und fachlicher Bestätigung einer neuen Feature-Plan-Version, inklusive zugehöriger Plan-Review-/Integration-Artefakte.
 - Nach `/update-feature-plan` und fachlicher Bestätigung einer neuen Feature-Plan-Version, inklusive zugehöriger Update-Datei und `TASKS.md`.
 - Nach einem einzelnen Task, wenn der Task validiert ist und der Status im Plan auf `done` steht.
@@ -86,7 +88,7 @@ Format:
 ```text
 <type>(optional-scope): <short description>
 
-[optional body]
+<body>
 
 [optional footer]
 ```
@@ -104,14 +106,25 @@ Erlaubte Typen:
 - `ci`
 - `perf`
 
-Regeln:
+Regeln Subject:
 
 - Imperativ verwenden: `add`, nicht `added`
 - Subject ohne Punkt am Ende
 - Subject maximal 72 Zeichen
 - Scope verwenden, wenn sinnvoll
-- Body erklärt das Warum, nicht nur das Was
 - Breaking Changes mit `!` und `BREAKING CHANGE:` markieren
+
+Regeln Body:
+
+- Der Body ist verpflichtend, ausser bei trivialen Einzel-Datei-Änderungen ohne erklärungsbedürftigen Kontext (z.B. Tippfehler korrigieren).
+- Leerzeile zwischen Subject und Body.
+- Zeilen im Body maximal 72 Zeichen breit.
+- 2–5 Stichpunkte oder kurze Sätze – nicht erschöpfend, aber ausreichend, um ohne Diff-Lektüre zu verstehen, was sich verändert hat.
+- Inhalt des Bodys:
+  - Welche Bereiche oder Dateien sind betroffen (z.B. Prisma-Schema, Server Action, Formularkomponente, Tests)?
+  - Was genau wurde geändert oder hinzugefügt – nicht nur das Schlagwort aus dem Subject, sondern die konkreten Teile?
+  - Warum diese Entscheidung, wenn es nicht offensichtlich ist?
+- Nicht enthalten: Implementierungsdetails auf Zeilenebene, Redundanzen zum Subject, allgemeine Aussagen ohne Informationswert.
 
 ## Schritt 4: Bestätigung Einholen
 
@@ -121,8 +134,9 @@ Zeige vor dem Commit:
 - Dateien pro Commit
 - Commit-Message(s)
 - Kurzbegründung
+- Hinweis, dass nach dem Commit automatisch `git push origin <current-branch>` ausgeführt wird
 
-Warte auf menschliche Bestätigung, bevor du commitest.
+Warte auf menschliche Bestätigung, bevor du commitest und pushst.
 
 ## Schritt 5: Committen
 
@@ -135,21 +149,15 @@ Nach jedem Commit:
 git status
 ```
 
-## Schritt 6: Push Zum Remote
+## Schritt 6: Auf Remote Pushen
 
-Nach erfolgreichem Commit sollst du den aktuellen Branch zum zugehoerigen Remote pushen, sofern ein Upstream-Remote konfiguriert ist:
-
-```bash
-git push
-```
-
-Wenn kein Upstream-Remote konfiguriert ist, ermittle den aktuellen Branch und pushe explizit zu `origin`:
+Nach erfolgreichem Commit pushe die Änderungen auf den Remote:
 
 ```bash
-git push -u origin <current-branch>
+git push origin <current-branch>
 ```
 
-Fuehre keinen Push aus, wenn der Nutzer explizit darum bittet, lokal zu bleiben, oder wenn der Arbeitsstand nach dem Commit nicht sauber ist.
+Der Push ist fester Bestandteil des Commit-Workflows und erfolgt automatisch nach der Bestätigung in Schritt 4. Nur wenn der Push explizit abgelehnt wurde oder kein Remote konfiguriert ist, wird er übersprungen.
 
 ## Qualitätsregeln
 
@@ -160,4 +168,3 @@ Fuehre keinen Push aus, wenn der Nutzer explizit darum bittet, lokal zu bleiben,
 - Repository soll nach jedem Commit funktionsfähig bleiben.
 - Zwischencommits sind erlaubt und erwünscht, wenn sie klein, validiert und nachvollziehbar sind.
 - Der letzte Feature-Commit soll erst nach `/document` erfolgen, sofern das Feature vollständig abgeschlossen wird.
-- Nach erfolgreichem Commit soll der aktuelle Branch zum Remote gepusht werden, sofern der Nutzer nicht explizit anderes verlangt.
