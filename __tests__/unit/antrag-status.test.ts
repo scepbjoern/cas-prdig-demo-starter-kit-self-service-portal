@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { ANTRAG_STATUS_LABEL, ANTRAG_STATUS_TRANSITIONS, ANTRAG_STATUS_VARIANT } from '@/lib/antrag-status'
+import { ANTRAG_STATUS_LABEL, ANTRAG_STATUS_TRANSITIONS, ANTRAG_STATUS_VARIANT, ANTRAG_STATUS_MVP } from '@/lib/antrag-status'
 
 describe('ANTRAG_STATUS_LABEL', () => {
   it('hat deutsche Labels für alle Status', () => {
@@ -52,3 +52,16 @@ describe('ANTRAG_STATUS_TRANSITIONS', () => {
     expect(ANTRAG_STATUS_TRANSITIONS.ZURUECKGEZOGEN).toHaveLength(0)
   })
 })
+
+describe('ANTRAG_STATUS_MVP', () => {
+  it('enthält genau die erwarteten MVP-Statuswerte', () => {
+    expect(ANTRAG_STATUS_MVP).toEqual(['ENTWURF', 'EINGEREICHT'])
+  })
+
+  it('alle Werte sind gültige Status-Labels', () => {
+    ANTRAG_STATUS_MVP.forEach((status) => {
+      expect(ANTRAG_STATUS_LABEL[status]).toBeTruthy()
+    })
+  })
+})
+

@@ -237,7 +237,7 @@ Aktionskeywords:
 
 ### Task 1: UPDATE `src/lib/antrag-status.ts` und `__tests__/unit/antrag-status.test.ts`
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Eine zentrale Konstante definiert, welche Statuswerte im MVP als Filter-Buttons angezeigt werden. Unit-Test sichert die Liste ab. `ANTRAG_STATUS_MVP` steuert nur die Anzeige der Buttons, nicht die serverseitige URL-Validierung.  
 **IMPLEMENT:**
 
@@ -254,10 +254,10 @@ Aktionskeywords:
 
 **ACCEPTANCE CRITERIA:**
 
-- [ ] `ANTRAG_STATUS_MVP` ist als `AntragStatus[]` definiert
-- [ ] Das Array enthaelt `ENTWURF` und `EINGEREICHT`
-- [ ] Unit-Test bestaetigt die Inhalte
-- [ ] `npm run test` ist gruen
+- [x] `ANTRAG_STATUS_MVP` ist als `AntragStatus[]` definiert
+- [x] Das Array enthaelt `ENTWURF` und `EINGEREICHT`
+- [x] Unit-Test bestaetigt die Inhalte
+- [x] `npm run test` ist gruen
 
 **VALIDATE:**
 
@@ -265,8 +265,8 @@ Aktionskeywords:
 
 ### Task 2: UPDATE `src/app/(app)/antraege/page.tsx` – Statusfilter, Suche und erweiterte Tabelle
 
-**Status:** planned  
-**Ziel:** Die Listenseite bietet Statusfilter-Buttons, eine Titelsuche mit `next/form` und eine "Kosten"-Spalte. Server-seitige Filterung ueber URL-Search-Params mit Validierung gegen das gesamte `AntragStatus`-Enum.  
+**Status:** done  
+**Ziel:** Die Listenseite bietet Statusfilter-Buttons, eine Titelsuche mit `next/form` und eine "Kosten"-Spalte. Server-seitige Filterung ueber URL-Search-Params mit validierung gegen das gesamte `AntragStatus`-Enum.  
 **IMPLEMENT:**
 
 - `searchParams` als Promise in der Server Component akzeptieren: `{ searchParams }: { searchParams: Promise<{ status?: string; suche?: string }> }`
@@ -283,7 +283,7 @@ Aktionskeywords:
 
 - `searchParams` ist in Next.js 16 ein Promise: `const { status, suche } = await searchParams`
 - SQLite `contains` ist case-insensitive by default; keine zusaetzliche Konfiguration noetig
-- Der Status-Wert aus der URL ist ein String; muss gegen das gesamte `AntragStatus`-Enum validiert werden (`Object.values(AntragStatus).includes(status as AntragStatus)`). Dies stellt sicher, dass Dashboard-Links auf `?status=GENEHMIGT` funktionieren, auch wenn `GENEHMIGT` nicht in `ANTRAG_STATUS_MVP` ist.
+- Der Status-Wert aus der URL ist ein String; muss gegen das gesamte `AntragStatus`-Enum validiert werden (`Object.values(AntragStatus).includes(status as AntragStatus)`). Dies stellt sicher, dass Dashboard-Links auf `?status=GENEHMIGT` funktionieren, auch wenn `GENEHMIGT` nicht in `ANTRAG_STATUS_MVP` is.
 - Wenn sowohl Status als auch Suche gesetzt sind, muessen beide Filter im `AND` kombiniert werden
 - Der "Zuruecksetzen"-Link muss auf `/antraege` ohne Query-Parameter verweisen
 - Das Suchformular muss den aktuellen Statusfilter als Hidden-Field mitfuehren, damit die Suche im Kontext des Statusfilters arbeitet
@@ -291,17 +291,17 @@ Aktionskeywords:
 
 **ACCEPTANCE CRITERIA:**
 
-- [ ] Statusfilter-Buttons zeigen "Alle" sowie die MVP-Statuswerte "Entwurf" und "Eingereicht"
-- [ ] Klick auf einen Statusfilter-Button filtert die Liste und zeigt den aktiven Status visuell an
-- [ ] Suchfeld filtert die Liste nach Titel (Teilstring-Suche) ueber `next/form` mit Client-Side-Navigation
-- [ ] Statusfilter und Suche koennen kombiniert werden
-- [ ] "Zuruecksetzen" entfernt alle Filter
-- [ ] Tabelle zeigt eine zusaetzliche Spalte "Kosten" formatiert in CHF
-- [ ] Leerer gefilterter Zustand zeigt passende Meldung
-- [ ] `Antragstellerin` sieht nur eigene Antraege (auch gefiltert)
-- [ ] `Admin` sieht alle Antraege (auch gefiltert)
-- [ ] Dashboard-Link `?status=GENEHMIGT` filtert korrekt (Status-Validierung gegen gesamtes Enum)
-- [ ] `npm run build` ist gruen
+- [x] Statusfilter-Buttons zeigen "Alle" sowie die MVP-Statuswerte "Entwurf" und "Eingereicht"
+- [x] Klick auf einen Statusfilter-Button filtert die Liste und zeigt den aktiven Status visuell an
+- [x] Suchfeld filtert die Liste nach Titel (Teilstring-Suche) ueber `next/form` mit Client-Side-Navigation
+- [x] Statusfilter und Suche koennen kombiniert werden
+- [x] "Zuruecksetzen" entfernt alle Filter
+- [x] Tabelle zeigt eine zusaetzliche Spalte "Kosten" formatiert in CHF
+- [x] Leerer gefilterter Zustand zeigt passende Meldung
+- [x] `Antragstellerin` sieht nur eigene Antraege (auch gefiltert)
+- [x] `Admin` sieht alle Antraege (auch gefiltert)
+- [x] Dashboard-Link `?status=GENEHMIGT` filtert korrekt (Status-Validierung gegen gesamtes Enum)
+- [x] `npm run build` ist gruen
 
 **VALIDATE:**
 
@@ -310,7 +310,7 @@ Aktionskeywords:
 
 ### Task 3: UPDATE `src/app/(app)/page.tsx` – Dashboard-Karten klickbar machen
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Die drei Dashboard-Karten (Antraege, Eingereicht, Genehmigt) sind als `Link`-Komponenten klickbar und fuehren zu gefilterten Listenansichten.  
 **IMPLEMENT:**
 
@@ -329,11 +329,11 @@ Aktionskeywords:
 
 **ACCEPTANCE CRITERIA:**
 
-- [ ] Klick auf "Meine/Antraege"-Karte fuehrt zu `/antraege`
-- [ ] Klick auf "Eingereicht"-Karte fuehrt zu `/antraege?status=EINGEREICHT`
-- [ ] Klick auf "Genehmigt"-Karte fuehrt zu `/antraege?status=GENEHMIGT` und zeigt nur genehmigte Antraege
-- [ ] Karten zeigen visuelles Hover-Feedback
-- [ ] `npm run build` ist gruen
+- [x] Klick auf "Meine/Antraege"-Karte fuehrt zu `/antraege`
+- [x] Klick auf "Eingereicht"-Karte fuehrt zu `/antraege?status=EINGEREICHT`
+- [x] Klick auf "Genehmigt"-Karte fuehrt zu `/antraege?status=GENEHMIGT` und zeigt nur genehmigte Antraege
+- [x] Karten zeigen visuelles Hover-Feedback
+- [x] `npm run build` ist gruen
 
 **VALIDATE:**
 
@@ -342,7 +342,7 @@ Aktionskeywords:
 
 ### Task 4: UPDATE `src/app/(app)/antraege/loading.tsx` – Skeleton an neue Spalten anpassen
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Das Lade-Skeleton spiegelt die neue Spaltenanzahl der Tabelle wider.  
 **IMPLEMENT:**
 
@@ -358,8 +358,8 @@ Aktionskeywords:
 
 **ACCEPTANCE CRITERIA:**
 
-- [ ] Loading-Skeleton zeigt waehrend des Ladens eine angemessene Platzhalter-Darstellung
-- [ ] Kein visueller Bruch beim Uebergang von Skeleton zu Tabelle
+- [x] Loading-Skeleton zeigt waehrend des Ladens eine angemessene Platzhalter-Darstellung
+- [x] Kein visueller Bruch beim Uebergang von Skeleton zu Tabelle
 
 **VALIDATE:**
 
@@ -368,7 +368,7 @@ Aktionskeywords:
 
 ### Task 5: UPDATE `__tests__/unit/antrag-status.test.ts` – Test fuer ANTRAG_STATUS_MVP
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Unit-Tests decken die neue MVP-Statuskonstante ab.  
 **IMPLEMENT:**
 
@@ -386,9 +386,9 @@ Aktionskeywords:
 
 **ACCEPTANCE CRITERIA:**
 
-- [ ] Test bestaetigt, dass `ANTRAG_STATUS_MVP` die richtigen Werte enthaelt
-- [ ] Test bestaetigt, dass alle Werte gueltige Enum-Werte sind
-- [ ] `npm run test` ist gruen
+- [x] Test bestaetigt, dass `ANTRAG_STATUS_MVP` die richtigen Werte enthaelt
+- [x] Test bestaetigt, dass alle Werte gueltige Enum-Werte sind
+- [x] `npm run test` ist gruen
 
 **VALIDATE:**
 
@@ -396,11 +396,11 @@ Aktionskeywords:
 
 ### Task 6: UPDATE `e2e/antraege.spec.ts` – E2E-Tests fuer Statusfilter und Suche
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Automatisierte E2E-Tests bestaetigen den Statusfilter- und Such-Flow.  
 **IMPLEMENT:**
 
-- Neuer Testfall "Applicant kann Antraege nach Status filtern": Login als `applicant@example.com`, Navigation zu `/antraege`, Klick auf "Eingereicht"-Filter-Button, Pruefung dass alle sichtbaren Zeilen den Status "Eingereicht" zeigen, Klick auf "Alle", Pruefung dass wieder alle Antraege sichtbar sind
+- Neuer Testfall "Applicant kann Antraege nach Status filtern": Login als `applicant@example.com`, Navigation zu `/antraege`, Klick auf "Eingereicht"-Filter-Button, Pruefung dass alle sichtaten Zeilen den Status "Eingereicht" zeigen, Klick auf "Alle", Pruefung dass wieder alle Antraege sichtbar sind
 - Neuer Testfall "Applicant kann Antraege nach Titel durchsuchen": Login als `applicant@example.com`, Navigation zu `/antraege`, Eingabe eines Suchbegriffs (aus Seed-Daten bekannt, z.B. Teil eines Titels), Submit, Pruefung dass nur passende Zeilen sichtbar sind
 - Login-Helper `loginAsApplicant` aus bestehendem Test wiederverwenden
 - Beide Tests nutzen eindeutige Selektoren (Rollen-basierte `getByRole`, Text-basierte `locator`)
@@ -416,9 +416,9 @@ Aktionskeywords:
 
 **ACCEPTANCE CRITERIA:**
 
-- [ ] Statusfilter-Test laeuft erfolgreich gegen lokalen Dev-Server
-- [ ] Suchfilter-Test laeuft erfolgreich gegen lokalen Dev-Server
-- [ ] Tests sind unabhaengig von der Reihenfolge der Seed-Daten
+- [x] Statusfilter-Test laeuft erfolgreich gegen lokalen Dev-Server
+- [x] Suchfilter-Test laeuft erfolgreich gegen lokalen Dev-Server
+- [x] Tests sind unabhaengig von der Reihenfolge der Seed-Daten
 
 **VALIDATE:**
 
@@ -426,7 +426,7 @@ Aktionskeywords:
 
 ### Task 7: VALIDATE Gesamtintegration
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** End-to-End-Stabilitaet des Features ist bestaetigt.  
 **IMPLEMENT:**
 
@@ -440,10 +440,10 @@ Aktionskeywords:
 **GOTCHA:** Better-Auth-Secret-Warnungen sind erwartbar, brechen `build` aber nicht.  
 **ACCEPTANCE CRITERIA:**
 
-- [ ] `npm run test` ist gruen
-- [ ] `npm run build` ist gruen
-- [ ] `npm run test:e2e` ist gruen (falls ausgefuehrt)
-- [ ] Manuelle Pruefung passt zum MVP-Scope
+- [x] `npm run test` ist gruen
+- [x] `npm run build` ist gruen
+- [x] `npm run test:e2e` ist gruen (falls ausgefuehrt)
+- [x] Manuelle Pruefung passt zum MVP-Scope
 
 **VALIDATE:**
 
@@ -531,31 +531,31 @@ Nutzer startet `npm run dev` und prueft:
 
 ## Acceptance Criteria
 
-- [ ] Antragstellerin kann ihre Antraege nach Status filtern
-- [ ] Antragstellerin kann ihre Antraege nach Titel durchsuchen
-- [ ] Statusfilter und Suche koennen kombiniert werden
-- [ ] Admin kann alle Antraege filtern und durchsuchen
-- [ ] Tabelle zeigt zusaetzliche Spalte "Kosten" in CHF
-- [ ] Dashboard-Karten sind klickbar und fuehren zu gefilterten Listenansichten
-- [ ] Aktiver Filter wird visuell hervorgehoben
-- [ ] "Zuruecksetzen" entfernt alle Filter
-- [ ] Leerer gefilterter Zustand zeigt passende Meldung
-- [ ] Unit-Tests fuer `ANTRAG_STATUS_MVP` sind gruen
-- [ ] E2E-Tests fuer Statusfilter und Suche sind gruen
-- [ ] `npm run build` ist gruen
-- [ ] Keine Regressionen in Dashboard, Detailseite, Bearbeiten-Flow
-- [ ] Dashboard-Karte "Genehmigt" filtert korrekt (Status-Validierung gegen gesamtes Enum)
-- [ ] Dokumentationsbedarf ist notiert
+- [x] Antragstellerin kann ihre Antraege nach Status filtern
+- [x] Antragstellerin kann ihre Antraege nach Titel durchsuchen
+- [x] Statusfilter und Suche koennen kombiniert werden
+- [x] Admin kann alle Antraege filtern und durchsuchen
+- [x] Tabelle zeigt zusaetzliche Spalte "Kosten" in CHF
+- [x] Dashboard-Karten sind klickbar und fuehren zu gefilterten Listenansichten
+- [x] Aktiver Filter wird visuell hervorgehoben
+- [x] "Zuruecksetzen" entfernt alle Filter
+- [x] Leerer gefilterter Zustand zeigt passende Meldung
+- [x] Unit-Tests fuer `ANTRAG_STATUS_MVP` sind gruen
+- [x] E2E-Tests fuer Statusfilter und Suche sind gruen
+- [x] `npm run build` ist gruen
+- [x] Keine Regressionen in Dashboard, Detailseite, Bearbeiten-Flow
+- [x] Dashboard-Karte "Genehmigt" filtert korrekt (Status-Validierung gegen gesamtes Enum)
+- [x] Dokumentationsbedarf ist notiert
 
 ## Completion Checklist
 
-- [ ] Alle Tasks sind umgesetzt
-- [ ] Jeder Task wurde validiert
-- [ ] Alle relevanten Tests laufen erfolgreich oder Ausnahmen sind begruendet
-- [ ] `npm run build` wurde bei groesseren Aenderungen ausgefuehrt oder begruendet ausgelassen
-- [ ] Manuelle Pruefung ist dokumentiert
-- [ ] Plan-/PRD-Abweichungen sind dokumentiert und genehmigt
-- [ ] Feature ist bereit fuer `/document` und `/commit`
+- [x] Alle Tasks sind umgesetzt
+- [x] Jeder Task wurde validiert
+- [x] Alle relevanten Tests laufen erfolgreich oder Ausnahmen sind begruendet
+- [x] `npm run build` wurde bei groesseren Aenderungen ausgefuehrt oder begruendet ausgelassen
+- [x] Manuelle Pruefung ist dokumentiert
+- [x] Plan-/PRD-Abweichungen sind dokumentiert und genehmigt
+- [x] Feature ist bereit fuer `/document` und `/commit`
 
 ## Documentation Notes
 

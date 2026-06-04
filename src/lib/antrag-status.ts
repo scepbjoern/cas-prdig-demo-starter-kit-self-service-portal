@@ -11,6 +11,8 @@ export const ANTRAG_STATUS_LABEL: Record<AntragStatus, string> = {
   ZURUECKGEZOGEN: 'Zurueckgezogen',
 }
 
+export const ANTRAG_STATUS_MVP: AntragStatus[] = ['ENTWURF', 'EINGEREICHT']
+
 export const ANTRAG_STATUS_VARIANT: Record<AntragStatus, BadgeVariant> = {
   ENTWURF: 'secondary',
   EINGEREICHT: 'default',

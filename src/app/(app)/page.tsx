@@ -34,37 +34,43 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">
-              {isApplicant ? 'Meine Weiterbildungsantraege' : 'Alle Weiterbildungsantraege'}
-            </CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{antragCount}</div>
-          </CardContent>
-        </Card>
+        <Link href="/antraege" className="block transition-all">
+          <Card className="hover:bg-muted/50 cursor-pointer transition-colors h-full">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">
+                {isApplicant ? 'Meine Weiterbildungsantraege' : 'Alle Weiterbildungsantraege'}
+              </CardTitle>
+              <FileText className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{antragCount}</div>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Eingereicht</CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{eingereichtCount}</div>
-          </CardContent>
-        </Card>
+        <Link href="/antraege?status=EINGEREICHT" className="block transition-all">
+          <Card className="hover:bg-muted/50 cursor-pointer transition-colors h-full">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Eingereicht</CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{eingereichtCount}</div>
+            </CardContent>
+          </Card>
+        </Link>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Genehmigt</CardTitle>
-            <CheckCircle className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{genehmigt}</div>
-          </CardContent>
-        </Card>
+        <Link href="/antraege?status=GENEHMIGT" className="block transition-all">
+          <Card className="hover:bg-muted/50 cursor-pointer transition-colors h-full">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Genehmigt</CardTitle>
+              <CheckCircle className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{genehmigt}</div>
+            </CardContent>
+          </Card>
+        </Link>
       </div>
 
       <div className="flex gap-3">

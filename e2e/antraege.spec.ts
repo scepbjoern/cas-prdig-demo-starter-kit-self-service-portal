@@ -67,6 +67,37 @@ test.describe('Antrag CRUD', () => {
     await expect(row.locator('text=Eingereicht')).toBeVisible()
   })
 
+  test('Applicant kann Antraege nach Status filtern', async ({ page }) => {
+    await loginAsApplicant(page)
+    await page.goto('/antraege')
+
+    // Klick auf "Eingereicht" Filter-Button
+    await page.click('a:has-text("Eingereicht")')
+    await expect(page).toHaveURL(/.*status=EINGEREICHT.*/)
+
+    // Nur eingereichte Anträge sollten sichtbar sein
+    await expect(page.locator('text=CAS Prozessdigitalisierung')).toBeVisible()
+    await expect(page.locator('text=Workshop Service Design Grundlagen')).not.toBeVisible()
+
+    // Klick auf "Alle" Filter-Button
+    await page.click('a:has-text("Alle")')
+    await expect(page.locator('text=Workshop Service Design Grundlagen')).toBeVisible()
+  })
+
+  test('Applicant kann Antraege nach Titel durchsuchen', async ({ page }) => {
+    await loginAsApplicant(page)
+    await page.goto('/antraege')
+
+    // Eingabe im Suchfeld und Submit
+    await page.fill('input[name="suche"]', 'Six Sigma')
+    await page.click('button:has-text("Suchen")')
+    await expect(page).toHaveURL(/.*suche=Six\+Sigma.*/)
+
+    // Nur der passende Antrag sollte sichtbar sein
+    await expect(page.locator('text=Lean Six Sigma Green Belt')).toBeVisible()
+    await expect(page.locator('text=CAS Prozessdigitalisierung')).not.toBeVisible()
+  })
+
   test('Admin sieht eingereichte Anträge', async ({ page }) => {
     await loginAsAdmin(page)
     await page.goto('/antraege')
