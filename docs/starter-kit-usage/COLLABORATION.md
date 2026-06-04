@@ -1,8 +1,8 @@
 # Zusammenarbeit im gemeinsamen Repository
 
-Diese Anleitung beschreibt den Mehrpersonen-Fall im PIV-Workflow: Mehrere Personen arbeiten im selben Repository an einem gemeinsamen IT-System. Sie ergänzt `PIV-WORKFLOW.md` und erklärt nur die PIV- und Repository-Konventionen. Git-Grundlagen werden hier nicht wiederholt.
+Diese Anleitung beschreibt den Mehrpersonen-Fall im PIV-Workflow: Mehrere Personen arbeiten im selben Repository an einem gemeinsamen IT-System. Sie ergänzt `PIV-WORKFLOW.md` und erklärt nur die PIV- und Repository-Konventionen, die speziell für die Gruppenarbeit gelten.
 
-> Für die Git-Grundlagen (Branching, Merging, Merge-Konflikte) siehe Github-Materialien auf Moodle
+> Git-Grundbegriffe (Repository, Commit, Push, Branch) sind in [`GIT_GRUNDLAGEN.md`](GIT_GRUNDLAGEN.md) erklärt.
 
 ## 1. Grundprinzip
 
@@ -203,7 +203,7 @@ Im geteilten Repository gibt es konkrete Momente, an denen ihr sicherstellen mü
 | Bevor ihr euren Feature-Branch in den gemeinsamen Branch mergt | Verhindert unnötige Konflikte und stellt sicher, dass ihr alle aktuellen Änderungen der anderen integriert. |
 | Nach Abschluss eines Foundation-Features mit `Schema = ja` | Das Prisma-Schema hat sich geändert. Ohne Sync arbeitet ihr mit einem inkonsistenten Datenmodell. Danach gilt: `npx prisma generate && npm run db:reset` ausführen. |
 
-Die genauen Git-Befehle für Fetch, Pull und Branch-Update sind im GitHub-Material auf Moodle beschrieben.
+Die genauen Git-Befehle für Fetch, Pull und Branch-Update findet ihr in der GitHub-Dokumentation oder über die VS Code-Befehlspalette (`Ctrl+Shift+P` → `Git: Pull`).
 
 **TASKS.md als Frühwarnsystem**
 
