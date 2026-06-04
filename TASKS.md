@@ -15,9 +15,10 @@
 | Feature | Datei | Abgeschlossen |
 |---|---|---|
 | Datenmodell Weiterbildungsantrag | [plan](docs/project/features/datenmodell-weiterbildungsantrag/plan-v002.md) | 2026-06-03 |
+| Antrag erfassen, als Entwurf speichern und einreichen | [plan](docs/project/features/antrag-erfassen-und-einreichen/plan-v001.md) | 2026-06-04 |
 
 ## Aktive Features
 
 | Feature | Status | Plan-Datei |
 |---|---|---|
-| Antrag erfassen, als Entwurf speichern und einreichen | done | [plan-v001](docs/project/features/antrag-erfassen-und-einreichen/plan-v001.md) |
+| Meine Antraege und Statusuebersicht | planned | [plan-v001](docs/project/features/meine-antraege-und-statusuebersicht/plan-v001.md) |
