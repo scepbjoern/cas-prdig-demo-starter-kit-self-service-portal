@@ -60,7 +60,9 @@ Beschreibe **ausführlich und Schritt für Schritt**, was der Mensch jetzt tun m
 - Was konkret zu sehen oder nicht zu sehen sein muss (erwartetes Ergebnis)
 - Was bei Abweichungen zu melden ist
 
-Warte danach explizit auf die Bestätigung des Menschen, dass die manuelle Prüfung erfolgreich war. Fahre nicht fort, bis diese Bestätigung vorliegt.
+Schliesse die manuelle Prüfanleitung immer mit dem Hinweis ab, den Dev-Server nach der Prüfung mit **Ctrl+C** zu stoppen, bevor der nächste Task gestartet wird.
+
+Warte danach explizit auf die Bestätigung des Menschen, dass die manuelle Prüfung erfolgreich war und der Server gestoppt wurde. Fahre nicht fort, bis diese Bestätigung vorliegt.
 
 **Schritt C – Explizite Weitermachen-Aufforderung:**
 
@@ -161,10 +163,15 @@ Ein Task, dessen VALIDATE-Abschnitt E2E-Tests vorsieht, darf nie auf `done` gese
 
 E2E-Tests benötigen einen laufenden Dev-Server. Gehe wie folgt vor:
 
-1. Prüfe, ob `localhost:3000` bereits erreichbar ist:
-   ```bash
-   curl -s -o /dev/null -w "%{http_code}" http://localhost:3000
-   ```
+1. Prüfe, ob `localhost:3000` bereits erreichbar ist. Wähle den passenden Befehl je nach Betriebssystem:
+   - **Windows (PowerShell):** `curl.exe` explizit verwenden, da `curl` in PowerShell ein Alias für `Invoke-WebRequest` ist und die Parameter nicht unterstützt:
+     ```powershell
+     curl.exe -s -o NUL -w "%{http_code}" http://localhost:3000
+     ```
+   - **macOS / Linux:**
+     ```bash
+     curl -s -o /dev/null -w "%{http_code}" http://localhost:3000
+     ```
 2. **Wenn der Server läuft (HTTP-Statuscode zurückgegeben):** Führe `npm run test:e2e` direkt aus. Berichte vollständig über Ergebnis und etwaige Fehler.
 3. **Wenn der Server nicht läuft:** Starte den Dev-Server nicht automatisch. Setze den Task auf `needs_human` und gib folgende Anleitung aus:
 
@@ -174,8 +181,11 @@ E2E-Tests benötigen einen laufenden Dev-Server. Gehe wie folgt vor:
 
    1. Terminal öffnen und ausführen: npm run dev
    2. Warten, bis "Ready" erscheint (typisch: http://localhost:3000)
-   3. In einem zweiten Terminal ausführen: npm run test:e2e
+   3. In einem zweiten Terminal eine der folgenden Varianten ausführen:
+      - `npm run test:e2e` – headless (schneller, Ergebnis im Terminal)
+      - `npm run test:e2e:ui` – visuell (Playwright öffnet Chromium, Tests live verfolgbar)
    4. Ergebnis hier melden (Anzahl Tests bestanden/fehlgeschlagen)
+   5. Dev-Server mit Ctrl+C stoppen
 
    Erst nach Meldung des Ergebnisses wird der Task auf "done" gesetzt.
    ```
