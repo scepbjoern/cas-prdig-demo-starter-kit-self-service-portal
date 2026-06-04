@@ -21,4 +21,4 @@
 
 | Feature | Status | Plan-Datei |
 |---|---|---|
-| Meine Antraege und Statusuebersicht | planned | [plan-v001](docs/project/features/meine-antraege-und-statusuebersicht/plan-v001.md) |
+| Meine Antraege und Statusuebersicht | planned | [plan-v002](docs/project/features/meine-antraege-und-statusuebersicht/plan-v002.md) |
