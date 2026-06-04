@@ -24,7 +24,7 @@ describe('ANTRAG_STATUS_VARIANT', () => {
 })
 
 describe('ANTRAG_STATUS_TRANSITIONS', () => {
-  it('erlaubt Einreichen eines Entwurfs', () => {
+  it('Direkter Statuswechsel ENTWURF -> EINGEREICHT ist erlaubt', () => {
     expect(ANTRAG_STATUS_TRANSITIONS.ENTWURF).toContain('EINGEREICHT')
   })
 

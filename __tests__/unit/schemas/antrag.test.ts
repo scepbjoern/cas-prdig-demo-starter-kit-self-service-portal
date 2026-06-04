@@ -84,6 +84,33 @@ describe('antragCreateSchema', () => {
     )
     expect(result.success).toBe(false)
   })
+  it('ein vollstaendiger Datensatz fuer den Direkt-Einreichen-Fluss ist valide', () => {
+    const antragFromDb = {
+      titel: 'CAS Prozessdigitalisierung',
+      anbieter: 'ZHAW School of Management and Law',
+      startdatum: new Date('2026-09-01'),
+      enddatum: new Date('2026-12-15'),
+      kostenChf: 5900,
+      kostenstelle: 'WB-1000',
+      begruendung: 'Die Weiterbildung staerkt die Faehigkeiten in Prozessanalyse und digitaler Zusammenarbeit deutlich.',
+      bemerkung: 'Optionaler Hinweis',
+    }
+    const result = antragCreateSchema.safeParse(normalizeAntragInput(antragFromDb))
+    expect(result.success).toBe(true)
+  })
+
+  it('ein Datensatz mit zu kurzer Begruendung wird vom Re-Validate abgelehnt', () => {
+    const antragFromDb = {
+      titel: 'CAS Prozessdigitalisierung',
+      anbieter: 'ZHAW School of Management and Law',
+      startdatum: new Date('2026-09-01'),
+      kostenChf: 5900,
+      kostenstelle: 'WB-1000',
+      begruendung: 'Zu kurz',
+    }
+    const result = antragCreateSchema.safeParse(normalizeAntragInput(antragFromDb))
+    expect(result.success).toBe(false)
+  })
 })
 
 describe('antragUpdateSchema', () => {

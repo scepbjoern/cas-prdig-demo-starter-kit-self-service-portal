@@ -20,4 +20,4 @@
 
 | Feature | Status | Plan-Datei |
 |---|---|---|
-| Antrag erfassen, als Entwurf speichern und einreichen | planned | [plan-v001](docs/project/features/antrag-erfassen-und-einreichen/plan-v001.md) |
+| Antrag erfassen, als Entwurf speichern und einreichen | done | [plan-v001](docs/project/features/antrag-erfassen-und-einreichen/plan-v001.md) |

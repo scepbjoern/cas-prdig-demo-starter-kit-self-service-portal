@@ -2,7 +2,7 @@ import { requireSession } from '@/lib/auth-helpers'
 import { prisma } from '@/lib/prisma'
 import { notFound, redirect } from 'next/navigation'
 import { AntragForm } from '@/components/antraege/antrag-form'
-import { updateAntrag } from '../../actions'
+import { updateAntrag, updateAntragAndSubmit } from '../../actions'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { ChevronLeft } from 'lucide-react'
@@ -19,9 +19,15 @@ export default async function BearbeitenPage({ params }: { params: Promise<{ id:
   if (!isOwner && !isAdmin) redirect('/antraege')
   if (antrag.status !== 'ENTWURF') redirect(`/antraege/${id}`)
 
-  const action = async (fd: FormData) => {
+  const handleSaveDraft = async (fd: FormData) => {
     'use server'
     await updateAntrag(id, fd)
+    redirect(`/antraege/${id}`)
+  }
+
+  const handleSubmitFinal = async (fd: FormData) => {
+    'use server'
+    await updateAntragAndSubmit(id, fd)
     redirect(`/antraege/${id}`)
   }
 
@@ -49,7 +55,8 @@ export default async function BearbeitenPage({ params }: { params: Promise<{ id:
             begruendung: antrag.begruendung,
             bemerkung: antrag.bemerkung ?? '',
           }}
-          action={action}
+          onSaveDraft={handleSaveDraft}
+          onSubmitFinal={handleSubmitFinal}
         />
       </div>
     </div>

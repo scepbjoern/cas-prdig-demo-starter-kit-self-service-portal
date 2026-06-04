@@ -5,13 +5,21 @@
 
 import { useForm, type Resolver } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useTransition } from 'react'
+import { useState, useTransition } from 'react'
 import { toast } from 'sonner'
 import { antragCreateSchema } from '@/lib/schemas/antrag'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 
 type AntragFormValues = {
   titel: string
@@ -27,12 +35,14 @@ type AntragFormValues = {
 interface AntragFormProps {
   mode: 'create' | 'edit'
   defaultValues?: Partial<AntragFormValues>
-  action: (formData: FormData) => Promise<void>
+  onSaveDraft: (formData: FormData) => Promise<void>
+  onSubmitFinal: (formData: FormData) => Promise<void>
   onCancel?: () => void
 }
 
-export function AntragForm({ mode, defaultValues, action, onCancel }: AntragFormProps) {
+export function AntragForm({ mode, defaultValues, onSaveDraft, onSubmitFinal, onCancel }: AntragFormProps) {
   const [isPending, startTransition] = useTransition()
+  const [dialogOpen, setDialogOpen] = useState(false)
   const form = useForm<AntragFormValues>({
     resolver: zodResolver(antragCreateSchema) as unknown as Resolver<AntragFormValues>,
     defaultValues: {
@@ -60,31 +70,54 @@ export function AntragForm({ mode, defaultValues, action, onCancel }: AntragForm
     return typeof value === 'string' ? value : ''
   }
 
-  const onSubmit = (values: AntragFormValues) => {
+  const buildFormData = (values: AntragFormValues) => {
+    const fd = new FormData()
+    fd.set('titel', toFormValue(values.titel))
+    fd.set('anbieter', toFormValue(values.anbieter))
+    fd.set('startdatum', toFormValue(values.startdatum))
+    fd.set('kostenChf', toFormValue(values.kostenChf))
+    fd.set('kostenstelle', toFormValue(values.kostenstelle))
+    fd.set('begruendung', toFormValue(values.begruendung))
+    if (values.enddatum) fd.set('enddatum', toFormValue(values.enddatum))
+    if (values.bemerkung) fd.set('bemerkung', toFormValue(values.bemerkung))
+    return fd
+  }
+
+  const handleDraftClick = form.handleSubmit((values) => {
     startTransition(async () => {
-      const fd = new FormData()
-      fd.set('titel', toFormValue(values.titel))
-      fd.set('anbieter', toFormValue(values.anbieter))
-      fd.set('startdatum', toFormValue(values.startdatum))
-      fd.set('kostenChf', toFormValue(values.kostenChf))
-      fd.set('kostenstelle', toFormValue(values.kostenstelle))
-      fd.set('begruendung', toFormValue(values.begruendung))
-      if (values.enddatum) fd.set('enddatum', toFormValue(values.enddatum))
-      if (values.bemerkung) fd.set('bemerkung', toFormValue(values.bemerkung))
       try {
-        await action(fd)
-        toast.success(mode === 'create' ? 'Entwurf gespeichert' : 'Entwurf gespeichert')
+        await onSaveDraft(buildFormData(values))
+        toast.success('Entwurf gespeichert')
       } catch (err: unknown) {
-        // Next.js redirect() wirft einen speziellen NEXT_REDIRECT-Fehler, der den Router erreichen muss
         if ((err as { digest?: string }).digest?.startsWith('NEXT_REDIRECT')) throw err
         toast.error(err instanceof Error ? err.message : 'Fehler beim Speichern')
       }
     })
+  })
+
+  const handleFinalClick = async () => {
+    const isValid = await form.trigger()
+    if (isValid) {
+      setDialogOpen(true)
+    }
   }
+
+  const handleConfirmFinal = form.handleSubmit((values) => {
+    setDialogOpen(false)
+    startTransition(async () => {
+      try {
+        await onSubmitFinal(buildFormData(values))
+        toast.success('Antrag eingereicht')
+      } catch (err: unknown) {
+        if ((err as { digest?: string }).digest?.startsWith('NEXT_REDIRECT')) throw err
+        toast.error(err instanceof Error ? err.message : 'Fehler beim Einreichen')
+      }
+    })
+  })
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+      <form className="space-y-4">
         <FormField
           control={form.control}
           name="titel"
@@ -194,8 +227,11 @@ export function AntragForm({ mode, defaultValues, action, onCancel }: AntragForm
           )}
         />
         <div className="flex gap-2">
-          <Button type="submit" disabled={isPending}>
-            {isPending ? 'Speichern...' : mode === 'create' ? 'Entwurf speichern' : 'Entwurf speichern'}
+          <Button type="button" onClick={handleDraftClick} disabled={isPending}>
+            {isPending ? 'Speichern...' : 'Entwurf speichern'}
+          </Button>
+          <Button type="button" variant="default" onClick={handleFinalClick} disabled={isPending}>
+            Speichern und einreichen
           </Button>
           {onCancel && (
             <Button type="button" variant="outline" onClick={onCancel}>
@@ -203,6 +239,25 @@ export function AntragForm({ mode, defaultValues, action, onCancel }: AntragForm
             </Button>
           )}
         </div>
+
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Antrag verbindlich einreichen?</DialogTitle>
+              <DialogDescription>
+                Der Antrag wechselt in den Status Eingereicht und kann danach nicht mehr bearbeitet werden.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setDialogOpen(false)}>
+                Abbrechen
+              </Button>
+              <Button type="button" onClick={handleConfirmFinal}>
+                Ja, einreichen
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </form>
     </Form>
   )

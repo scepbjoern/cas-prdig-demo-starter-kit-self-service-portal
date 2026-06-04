@@ -44,6 +44,25 @@ export async function createAntrag(formData: FormData) {
   redirect(`/antraege/${antrag.id}`)
 }
 
+export async function createAntragAndSubmit(formData: FormData) {
+  const session = await requireRole(['user_applicant', 'admin'])
+
+  const raw = getAntragFormValues(formData)
+  const parsed = antragCreateSchema.safeParse(raw)
+  if (!parsed.success) throw new Error(parsed.error.message)
+
+  const antrag = await prisma.antrag.create({
+    data: {
+      ...parsed.data,
+      erstellerId: session.user.id,
+      status: 'EINGEREICHT',
+    },
+  })
+
+  revalidatePath('/antraege')
+  redirect(`/antraege/${antrag.id}`)
+}
+
 export async function updateAntrag(id: string, formData: FormData) {
   const session = await requireSession()
 
@@ -63,14 +82,51 @@ export async function updateAntrag(id: string, formData: FormData) {
   revalidatePath(`/antraege/${id}`)
 }
 
+export async function updateAntragAndSubmit(id: string, formData: FormData) {
+  const session = await requireSession()
+
+  const antrag = await prisma.antrag.findUniqueOrThrow({ where: { id } })
+  if (antrag.status !== 'ENTWURF') throw new Error('Nur Entwürfe können bearbeitet werden')
+  if (antrag.erstellerId !== session.user.id) {
+    throw new Error('Keine Berechtigung zum Einreichen')
+  }
+
+  const raw = getAntragFormValues(formData)
+  const parsed = antragUpdateSchema.safeParse(raw)
+  if (!parsed.success) throw new Error(parsed.error.message)
+
+  await prisma.antrag.update({
+    where: { id },
+    data: { ...parsed.data, status: 'EINGEREICHT' },
+  })
+
+  revalidatePath('/antraege')
+  revalidatePath(`/antraege/${id}`)
+}
+
 export async function submitAntrag(id: string) {
   const session = await requireSession()
 
   const antrag = await prisma.antrag.findUniqueOrThrow({ where: { id } })
-  if (antrag.erstellerId !== session.user.id && session.user.role !== 'admin') {
-    throw new Error('Keine Berechtigung')
+  if (antrag.erstellerId !== session.user.id) {
+    throw new Error('Keine Berechtigung zum Einreichen')
   }
   if (antrag.status !== 'ENTWURF') throw new Error('Antrag ist nicht im Entwurfsstatus')
+
+  const raw = normalizeAntragInput({
+    titel: antrag.titel,
+    anbieter: antrag.anbieter,
+    startdatum: antrag.startdatum,
+    enddatum: antrag.enddatum,
+    kostenChf: antrag.kostenChf,
+    kostenstelle: antrag.kostenstelle,
+    begruendung: antrag.begruendung,
+    bemerkung: antrag.bemerkung,
+  })
+  const parsed = antragCreateSchema.safeParse(raw)
+  if (!parsed.success) {
+    throw new Error('Antrag kann nicht eingereicht werden: ' + parsed.error.message)
+  }
 
   await prisma.antrag.update({
     where: { id },

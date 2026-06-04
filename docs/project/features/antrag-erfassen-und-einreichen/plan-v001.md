@@ -250,7 +250,7 @@ Aktionskeywords:
 
 ### Task 1: UPDATE `src/app/(app)/antraege/actions.ts` - `submitAntrag` haerten
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Beim Einreichen wird der persistierte Antrag erneut gegen `antragCreateSchema` validiert; nur der Ersteller (auch fuer Admins) darf einreichen.  
 **IMPLEMENT:**
 
@@ -280,7 +280,7 @@ Aktionskeywords:
 
 ### Task 2: ADD `createAntragAndSubmit` und `updateAntragAndSubmit` in `src/app/(app)/antraege/actions.ts`
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Atomare Server Actions "Speichern und Einreichen" fuer Create- und Edit-Flow.  
 **IMPLEMENT:**
 
@@ -310,7 +310,7 @@ Aktionskeywords:
 
 ### Task 3: UPDATE `src/components/antraege/antrag-form.tsx` - Zweiter Aktionsbutton mit Bestaetigungsdialog
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Antragstellende koennen aus dem Formular zwischen "Entwurf speichern" und "Speichern und einreichen" waehlen; Direkt-Einreichen erfordert eine explizite Bestaetigung.  
 **IMPLEMENT:**
 
@@ -346,7 +346,7 @@ Aktionskeywords:
 
 ### Task 4: UPDATE `neu/page.tsx` und `bearbeiten/page.tsx` - beide Actions durchreichen
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Create- und Edit-Seiten reichen die jeweils passenden Server Actions an `AntragForm` durch und navigieren nach Erfolg korrekt.  
 **IMPLEMENT:**
 
@@ -374,7 +374,7 @@ Aktionskeywords:
 
 ### Task 5: UPDATE `__tests__/unit/schemas/antrag.test.ts` und `__tests__/unit/antrag-status.test.ts`
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Tests decken den Direkt-Einreichen-Fluss und die Re-Validierung ab.  
 **IMPLEMENT:**
 
@@ -400,7 +400,7 @@ Aktionskeywords:
 
 ### Task 6: UPDATE `e2e/antraege.spec.ts` - End-to-End-Test "Antrag erfassen und direkt einreichen"
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** Ein automatisierter E2E-Test bestaetigt den vollstaendigen User-Flow durch UI, Server Action und DB.  
 **IMPLEMENT:**
 
@@ -428,7 +428,7 @@ Aktionskeywords:
 
 ### Task 7: VALIDATE Gesamtintegration
 
-**Status:** planned  
+**Status:** done  
 **Ziel:** End-to-End-Stabilitaet des Features ist bestaetigt.  
 **IMPLEMENT:**
 
@@ -528,29 +528,29 @@ Nutzer startet `npm run dev` und prueft:
 
 ## Acceptance Criteria
 
-- [ ] Antragstellerin kann einen Weiterbildungsantrag erfassen
-- [ ] Antragstellerin kann den Antrag als Entwurf speichern
-- [ ] Antragstellerin kann den Antrag direkt aus dem Formular einreichen (Bestaetigungsdialog ist Pflicht)
-- [ ] Antragstellerin kann einen bestehenden Entwurf bearbeiten und in einem Schritt einreichen
-- [ ] Antragstellerin kann einen bestehenden Entwurf weiterhin ueber den Detail-Einreichen-Button einreichen
-- [ ] Beim Einreichen wird der Antrag serverseitig gegen das vollstaendige Zod-Schema validiert
-- [ ] Nur der Ersteller darf seinen Antrag einreichen; Admins koennen fremde Antraege nicht einreichen
-- [ ] Alle Validierungsfehler werden mit verstaendlichen deutschen Meldungen angezeigt
-- [ ] Unit-Tests fuer Schema und Status sind erweitert und gruen
-- [ ] Playwright-E2E "Antrag erfassen und direkt einreichen" ist vorhanden und laeuft gegen lokalen Dev-Server gruen
-- [ ] `npm run build` ist gruen
-- [ ] Keine Regressionen in Liste, Detailseite, Bearbeiten-Flow und Dashboard
-- [ ] Dokumentationsbedarf ist notiert
+- [x] Antragstellerin kann einen Weiterbildungsantrag erfassen
+- [x] Antragstellerin kann den Antrag als Entwurf speichern
+- [x] Antragstellerin kann den Antrag direkt aus dem Formular einreichen (Bestaetigungsdialog ist Pflicht)
+- [x] Antragstellerin kann einen bestehenden Entwurf bearbeiten und in einem Schritt einreichen
+- [x] Antragstellerin kann einen bestehenden Entwurf weiterhin ueber den Detail-Einreichen-Button einreichen
+- [x] Beim Einreichen wird der Antrag serverseitig gegen das vollstaendige Zod-Schema validiert
+- [x] Nur der Ersteller darf seinen Antrag einreichen; Admins koennen fremde Antraege nicht einreichen
+- [x] Alle Validierungsfehler werden mit verstaendlichen deutschen Meldungen angezeigt
+- [x] Unit-Tests fuer Schema und Status sind erweitert und gruen
+- [x] Playwright-E2E "Antrag erfassen und direkt einreichen" ist vorhanden und laeuft gegen lokalen Dev-Server gruen
+- [x] `npm run build` ist gruen
+- [x] Keine Regressionen in Liste, Detailseite, Bearbeiten-Flow und Dashboard
+- [x] Dokumentationsbedarf ist notiert
 
 ## Completion Checklist
 
-- [ ] Alle Tasks sind umgesetzt
-- [ ] Jeder Task wurde validiert
-- [ ] Alle relevanten Tests laufen erfolgreich oder Ausnahmen sind begruendet
-- [ ] `npm run build` wurde bei groesseren Aenderungen ausgefuehrt
-- [ ] Manuelle Pruefung ist dokumentiert
-- [ ] Plan-/PRD-Abweichungen sind dokumentiert und genehmigt
-- [ ] Feature ist bereit fuer `/document` und `/commit`
+- [x] Alle Tasks sind umgesetzt
+- [x] Jeder Task wurde validiert
+- [x] Alle relevanten Tests laufen erfolgreich oder Ausnahmen sind begruendet
+- [x] `npm run build` wurde bei groesseren Aenderungen ausgefuehrt
+- [x] Manuelle Pruefung ist dokumentiert
+- [x] Plan-/PRD-Abweichungen sind dokumentiert und genehmigt
+- [x] Feature ist bereit fuer `/document` und `/commit`
 
 ## Documentation Notes
 
